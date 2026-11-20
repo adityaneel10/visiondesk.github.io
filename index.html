@@ -1,0 +1,3718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VisionDesk — Ophthalmology Notes &amp; Visual Atlas</title>
+  <meta name="theme-color" content="#0d9488" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="VisionDesk" />
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%2314b8a6'/%3E%3Cstop offset='100%25' stop-color='%230f766e'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Crect x='12' y='14' width='40' height='36' rx='8' fill='none' stroke='%23ffffff' stroke-opacity='0.35' stroke-width='2.5'/%3E%3Cpath d='M13 32c4.8-8 11.4-12 19-12s14.2 4 19 12c-4.8 8-11.4 12-19 12s-14.2-4-19-12z' fill='none' stroke='%23ffffff' stroke-width='3.2' stroke-linejoin='round'/%3E%3Ccircle cx='32' cy='32' r='7.5' fill='%23ffffff'/%3E%3Ccircle cx='32' cy='32' r='3.5' fill='%230f766e'/%3E%3Ccircle cx='34.2' cy='29.8' r='1.5' fill='%23ffffff'/%3E%3C/svg%3E" />
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script>
+    tailwind.config = { darkMode: 'class' };
+  </script>
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    /* Custom subtle scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    .auto-textarea {
+      field-sizing: content;
+      min-height: 76px;
+    }
+    /* Dark Mode Overrides for clean, consistent clinical contrast */
+    html.dark body { background-color: #0f172a; color: #e2e8f0; }
+    html.dark header,
+    html.dark nav,
+    html.dark aside,
+    html.dark section,
+    html.dark .bg-white { background-color: #1e293b !important; border-color: #334155 !important; color: #e2e8f0; }
+    html.dark .bg-slate-50,
+    html.dark .bg-slate-50\/70,
+    html.dark .bg-slate-50\/40 { background-color: #0f172a !important; }
+    html.dark .bg-slate-100,
+    html.dark .bg-slate-100\/90 { background-color: #334155 !important; color: #e2e8f0 !important; }
+    html.dark .text-slate-900,
+    html.dark .text-slate-800 { color: #f1f5f9 !important; }
+    html.dark .text-slate-700,
+    html.dark .text-slate-600 { color: #cbd5e1 !important; }
+    html.dark .text-slate-500,
+    html.dark .text-slate-400 { color: #94a3b8 !important; }
+    html.dark .border-slate-200,
+    html.dark .border-slate-100 { border-color: #334155 !important; }
+    html.dark input,
+    html.dark textarea,
+    html.dark select { color: #f1f5f9 !important; border-color: #475569 !important; }
+    html.dark input::placeholder,
+    html.dark textarea::placeholder { color: #64748b !important; }
+    html.dark #network-svg { background-color: #0f172a !important; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-teal-100 selection:text-teal-900">
+  <div id="app" class="min-h-dvh flex flex-col">
+    <!-- Minimal Top Bar -->
+    <header class="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-slate-200 px-3 sm:px-5 py-2 flex items-center justify-between gap-2">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <button id="btn-toggle-sidebar" type="button" aria-label="Toggle notes sidebar" class="p-2 rounded-lg text-slate-600 hover:bg-slate-100 active:bg-slate-200 transition" title="Collapse / Expand Sidebar">
+          <i data-lucide="panel-left" class="w-5 h-5"></i>
+        </button>
+        <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-teal-400 via-teal-600 to-teal-800 text-white flex items-center justify-center shrink-0 shadow-sm">
+          <svg viewBox="0 0 36 36" class="w-5 h-5" fill="none" aria-hidden="true">
+            <rect x="6" y="7" width="24" height="22" rx="5" stroke="currentColor" stroke-opacity="0.35" stroke-width="1.6" />
+            <path d="M7.5 18c2.8-4.8 6.4-7.2 10.5-7.2S25.7 13.2 28.5 18c-2.8 4.8-6.4 7.2-10.5 7.2S10.3 22.8 7.5 18z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+            <circle cx="18" cy="18" r="4.5" fill="currentColor" />
+            <circle cx="18" cy="18" r="2" fill="#0f766e" />
+            <circle cx="19.3" cy="16.7" r="0.9" fill="#ffffff" />
+          </svg>
+        </div>
+        <div class="min-w-0">
+          <h1 class="text-sm sm:text-base font-bold text-slate-900 tracking-tight truncate leading-tight">VisionDesk</h1>
+          <p id="sync-status-label" class="text-[11px] text-slate-500 truncate">Saved locally</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button id="btn-toggle-right-sidebar" type="button" aria-label="Toggle tools sidebar" class="p-2 rounded-lg text-slate-600 hover:bg-slate-100 active:bg-slate-200 transition" title="Collapse / Expand Tools Sidebar">
+          <i data-lucide="panel-right" class="w-5 h-5"></i>
+        </button>
+      </div>
+    </header>
+
+
+
+    <!-- Main Workspace -->
+    <div class="flex-1 flex relative max-w-[1600px] w-full mx-auto">
+      <!-- Mobile Backdrop -->
+      <div id="sidebar-backdrop" class="fixed inset-0 bg-slate-900/40 z-30 hidden lg:hidden"></div>
+
+      <!-- Sidebar: Notes Directory -->
+      <aside id="sidebar" class="fixed lg:static inset-y-0 left-0 z-40 w-80 max-w-[85vw] bg-white border-r border-slate-200 flex flex-col transform -translate-x-full lg:translate-x-0 transition-all duration-200 ease-out lg:h-[calc(100vh-53px)] lg:sticky lg:top-[53px] shrink-0">
+        <div class="p-3 border-b border-slate-200 space-y-2.5">
+          <div class="flex items-center justify-between lg:hidden">
+            <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Condition Notes</span>
+            <button id="btn-close-sidebar" type="button" class="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100">
+              <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+          </div>
+          <div class="relative">
+            <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+            <input id="search-input" type="text" placeholder="Search conditions, tags, tables..." class="w-full pl-9 pr-3 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white transition" />
+          </div>
+          <div id="specialty-filters" class="flex items-center gap-1.5 overflow-x-auto pb-1">
+            <!-- Filter pills rendered by JS -->
+          </div>
+          <div class="grid grid-cols-2 gap-1.5">
+            <select id="tag-filter-select" aria-label="Filter by tag" class="px-2 py-1.5 text-[11px] font-medium bg-slate-50 border border-slate-200 rounded-lg text-slate-700 focus:outline-none focus:ring-1 focus:ring-teal-500">
+              <option value="All">All Tags</option>
+            </select>
+            <select id="sort-notes-select" aria-label="Sort topics" class="px-2 py-1.5 text-[11px] font-medium bg-slate-50 border border-slate-200 rounded-lg text-slate-700 focus:outline-none focus:ring-1 focus:ring-teal-500">
+              <option value="updated">Sort: Recent</option>
+              <option value="tag">Sort: By Tag (A–Z)</option>
+              <option value="title">Sort: Title (A–Z)</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="notes-list" class="flex-1 overflow-y-auto p-2 space-y-1.5">
+          <!-- Note items rendered by JS -->
+        </div>
+
+        <div class="p-2.5 border-t border-slate-200 bg-slate-50/70 flex items-center justify-between text-[11px] text-slate-500">
+          <span id="notes-count-label">0 notes</span>
+          <span>Offline-ready (IndexedDB)</span>
+        </div>
+      </aside>
+
+      <!-- Main Editor Pane -->
+      <main class="flex-1 min-w-0 p-3 pb-24 sm:p-6 md:pb-8 lg:p-8">
+
+        <div id="editor-container" class="max-w-4xl mx-auto space-y-6">
+          <!-- Rendered by JS -->
+        </div>
+        <div id="network-container" class="max-w-5xl mx-auto space-y-6 hidden">
+          <!-- Topic Network Graph rendered by JS -->
+        </div>
+        <div id="lateral-container" class="max-w-5xl mx-auto space-y-6 hidden">
+          <!-- Lateral Study Mode rendered by JS -->
+        </div>
+        <div id="flashcards-container" class="max-w-3xl mx-auto space-y-6 hidden">
+          <!-- Flashcards Study Deck rendered by JS -->
+        </div>
+      </main>
+
+      <!-- Mobile Right Backdrop -->
+      <div id="right-sidebar-backdrop" class="fixed inset-0 bg-slate-900/40 z-30 hidden lg:hidden"></div>
+
+      <!-- Collapsible Right Tools Sidebar -->
+      <aside id="right-sidebar" class="fixed lg:static inset-y-0 right-0 z-40 w-56 max-w-[75vw] bg-white border-l border-slate-200 flex flex-col transform translate-x-full lg:translate-x-0 transition-all duration-200 ease-out lg:h-[calc(100vh-53px)] lg:sticky lg:top-[53px] shrink-0 p-3 space-y-3">
+        <div class="flex items-center justify-between lg:hidden pb-2 border-b border-slate-200">
+          <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Tools</span>
+          <button id="btn-close-right-sidebar" type="button" class="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <button id="btn-new-note-top" type="button" class="w-full inline-flex items-center justify-center gap-2 px-3 py-2 text-xs font-semibold text-white bg-teal-600 hover:bg-teal-700 rounded-xl shadow-xs transition">
+          <i data-lucide="plus" class="w-4 h-4"></i>
+          <span>New Note</span>
+        </button>
+
+        <div class="pt-2 border-t border-slate-200 space-y-1">
+          <p class="px-2 pb-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">Workspace</p>
+          <button id="btn-mode-notes" type="button" class="w-full inline-flex items-center gap-2 px-2.5 py-2 text-xs font-semibold rounded-lg bg-slate-100 text-slate-900 transition">
+            <i data-lucide="file-text" class="w-4 h-4"></i><span>Notes</span>
+          </button>
+          <button id="btn-mode-network" type="button" class="w-full inline-flex items-center gap-2 px-2.5 py-2 text-xs font-medium rounded-lg text-slate-600 hover:bg-slate-100 transition">
+            <i data-lucide="share-2" class="w-4 h-4"></i><span>Network</span>
+          </button>
+          <button id="btn-mode-lateral" type="button" class="w-full inline-flex items-center gap-2 px-2.5 py-2 text-xs font-medium rounded-lg text-slate-600 hover:bg-slate-100 transition">
+            <i data-lucide="columns-3" class="w-4 h-4"></i><span>Lateral Study</span>
+          </button>
+          <button id="btn-mode-flashcards" type="button" class="w-full inline-flex items-center justify-between px-2.5 py-2 text-xs font-medium rounded-lg text-slate-600 hover:bg-slate-100 transition">
+            <span class="inline-flex items-center gap-2"><i data-lucide="layers" class="w-4 h-4"></i><span>Flashcards</span></span>
+            <span id="due-badge" class="px-1.5 py-0.2 rounded-full text-[10px] font-bold bg-teal-600 text-white">0</span>
+          </button>
+        </div>
+
+        <div class="pt-2 border-t border-slate-200 space-y-1">
+          <p class="px-2 pb-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">Tools &amp; Settings</p>
+          <button id="btn-open-ai" type="button" class="w-full inline-flex items-center gap-2 px-2.5 py-2 text-xs font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition">
+            <i data-lucide="sparkles" class="w-4 h-4"></i><span>Gemini AI</span>
+          </button>
+          <button id="btn-open-schema" type="button" class="w-full inline-flex items-center gap-2 px-2.5 py-2 text-xs font-medium text-slate-700 hover:bg-slate-100 rounded-lg transition">
+            <i data-lucide="sliders-horizontal" class="w-4 h-4"></i><span>Customize Schema</span>
+          </button>
+          <button id="btn-toggle-dark" type="button" class="w-full inline-flex items-center gap-2 px-2.5 py-2 text-xs font-medium text-slate-700 hover:bg-slate-100 rounded-lg transition">
+            <i id="icon-dark-mode" data-lucide="moon" class="w-4 h-4"></i><span>Dark Mode</span>
+          </button>
+          <button id="btn-open-sync" type="button" class="w-full inline-flex items-center gap-2 px-2.5 py-2 text-xs font-medium text-teal-700 bg-teal-50 hover:bg-teal-100 rounded-lg transition">
+            <i data-lucide="settings" class="w-4 h-4"></i><span>Settings &amp; Backup</span>
+          </button>
+        </div>
+      </aside>
+    </div>
+    <!-- Mobile Bottom Navigation (Thumb-friendly for Samsung S23 / 360px+ viewports) -->
+    <nav id="mobile-bottom-nav" class="md:hidden fixed bottom-0 inset-x-0 z-30 bg-white/95 backdrop-blur border-t border-slate-200 grid grid-cols-4 h-14 px-1">
+      <button type="button" data-mobile-mode="notes" class="flex flex-col items-center justify-center gap-0.5 text-[11px] font-semibold text-teal-600">
+        <i data-lucide="file-text" class="w-4 h-4"></i>
+        <span>Notes</span>
+      </button>
+      <button type="button" data-mobile-mode="network" class="flex flex-col items-center justify-center gap-0.5 text-[11px] font-medium text-slate-500">
+        <i data-lucide="share-2" class="w-4 h-4"></i>
+        <span>Network</span>
+      </button>
+      <button type="button" data-mobile-mode="lateral" class="flex flex-col items-center justify-center gap-0.5 text-[11px] font-medium text-slate-500">
+        <i data-lucide="columns-3" class="w-4 h-4"></i>
+        <span>Lateral</span>
+      </button>
+      <button type="button" data-mobile-mode="flashcards" class="relative flex flex-col items-center justify-center gap-0.5 text-[11px] font-medium text-slate-500">
+        <i data-lucide="layers" class="w-4 h-4"></i>
+        <span>Cards</span>
+        <span id="mobile-due-badge" class="absolute top-1.5 right-4 px-1.5 rounded-full text-[9px] font-bold bg-teal-600 text-white">0</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- Schema Customization Modal -->
+  <div id="modal-schema" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs">
+    <div class="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-xl max-h-[88vh] flex flex-col overflow-hidden">
+      <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
+        <div>
+          <h2 class="text-base font-bold text-slate-900">Customize Note Schema</h2>
+          <p class="text-xs text-slate-500 mt-0.5">Add or remove condition fields and specialties without editing code.</p>
+        </div>
+        <button id="btn-close-schema" type="button" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <div class="p-5 overflow-y-auto space-y-6">
+        <!-- Condition Fields Section -->
+        <div>
+          <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2.5">Condition Description Fields</h3>
+          <div id="schema-fields-list" class="space-y-2 mb-3"></div>
+          <form id="form-add-field" class="flex flex-col sm:flex-row gap-2">
+            <input id="new-field-label" type="text" required placeholder="New field label (e.g., IOP & Gonioscopy, Visual Acuity)" class="flex-1 px-3 py-2 text-xs sm:text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500" />
+            <select id="new-field-type" class="px-3 py-2 text-xs sm:text-sm border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-teal-500">
+              <option value="textarea">Long Text</option>
+              <option value="text">Short Text</option>
+            </select>
+            <button type="submit" class="px-3.5 py-2 text-xs sm:text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 rounded-lg transition shrink-0">Add Field</button>
+          </form>
+        </div>
+
+        <!-- Specialties Section -->
+        <div class="pt-4 border-t border-slate-200">
+          <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2.5">Ophthalmology Subspecialties</h3>
+          <div id="schema-specialties-list" class="flex flex-wrap gap-2 mb-3"></div>
+          <form id="form-add-specialty" class="flex gap-2">
+            <input id="new-specialty-name" type="text" required placeholder="Add subspecialty (e.g., Ocular Oncology, Strabismus)" class="flex-1 px-3 py-2 text-xs sm:text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500" />
+            <button type="submit" class="px-3.5 py-2 text-xs sm:text-sm font-semibold text-white bg-slate-800 hover:bg-slate-900 rounded-lg transition shrink-0">Add</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sync & Backup Modal -->
+  <div id="modal-sync" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs">
+    <div class="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-xl max-h-[88vh] flex flex-col overflow-hidden">
+      <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
+        <div>
+          <h2 class="text-base font-bold text-slate-900">Settings — Sync &amp; Auto-Backup</h2>
+          <p class="text-xs text-slate-500 mt-0.5">Sync via GitHub Gist or transfer a portable JSON bundle (with images).</p>
+        </div>
+        <button id="btn-close-sync" type="button" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <div class="p-5 overflow-y-auto space-y-6">
+        <!-- Option 1: Portable JSON File -->
+        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+          <div class="flex items-start gap-3">
+            <div class="p-2 rounded-lg bg-white border border-slate-200 text-teal-600 shrink-0">
+              <i data-lucide="hard-drive-download" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <h3 class="text-sm font-semibold text-slate-900">Portable File Sync (iCloud / Google Drive / AirDrop)</h3>
+              <p class="text-xs text-slate-600 mt-0.5">Export all notes, classification tables, schema customizations, and attached images into one JSON file.</p>
+            </div>
+          </div>
+          <div class="flex flex-wrap items-center gap-2 pt-1">
+
+            <label class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-slate-700 bg-white hover:bg-slate-100 border border-slate-300 rounded-lg cursor-pointer transition">
+              <i data-lucide="upload" class="w-3.5 h-3.5"></i> Import &amp; Merge (.json)
+              <input id="input-import-merge" type="file" accept="application/json,.json" class="hidden" />
+            </label>
+            <label class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-slate-600 bg-white hover:bg-slate-100 border border-slate-200 rounded-lg cursor-pointer transition">
+              <i data-lucide="replace" class="w-3.5 h-3.5"></i> Replace All (.json)
+              <input id="input-import-replace" type="file" accept="application/json,.json" class="hidden" />
+            </label>
+          </div>
+          <div class="pt-3 border-t border-slate-200 flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <label for="backup-interval-select" class="text-xs font-medium text-slate-700">Auto-Backup Interval:</label>
+              <select id="backup-interval-select" class="px-2.5 py-1 text-xs bg-white border border-slate-200 rounded-lg text-slate-700 focus:outline-none">
+                <option value="0">Off (Manual)</option>
+                <option value="1">Every 1 day</option>
+                <option value="3">Every 3 days</option>
+                <option value="7">Every 7 days (Weekly)</option>
+              </select>
+            </div>
+            <div class="flex items-center gap-2">
+              <span id="last-backup-label" class="text-[11px] text-slate-500">Last backup: Never</span>
+              <button id="btn-restore-snapshot" type="button" class="px-2.5 py-1 text-[11px] font-medium text-teal-700 bg-teal-50 hover:bg-teal-100 border border-teal-200 rounded-lg transition" title="Restore automatic rolling IndexedDB snapshot">Restore Snapshot</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Option 2: GitHub Gist Cloud Sync -->
+        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+          <div class="flex items-start gap-3">
+            <div class="p-2 rounded-lg bg-white border border-slate-200 text-slate-800 shrink-0">
+              <i data-lucide="cloud" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <h3 class="text-sm font-semibold text-slate-900">Direct Cloud Sync (GitHub Gist)</h3>
+              <p class="text-xs text-slate-600 mt-0.5">Enter a GitHub Personal Access Token (with <code class="px-1 py-0.5 bg-slate-200 rounded text-[11px]">gist</code> scope) to push/pull encrypted-in-transit notes across devices.</p>
+            </div>
+          </div>
+
+          <div class="space-y-2.5">
+            <div>
+              <label for="gist-token-input" class="block text-xs font-medium text-slate-700 mb-1">GitHub Personal Access Token</label>
+              <input id="gist-token-input" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" class="w-full px-3 py-2 text-xs sm:text-sm bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500" />
+            </div>
+            <div>
+              <label for="gist-id-input" class="block text-xs font-medium text-slate-700 mb-1">Gist ID <span class="text-slate-400 font-normal">(leave blank on first push to create a secret Gist)</span></label>
+              <input id="gist-id-input" type="text" placeholder="e.g., a1b2c3d4e5f6..." class="w-full px-3 py-2 text-xs sm:text-sm bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500" />
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <label class="inline-flex items-center gap-2 text-xs text-slate-600 cursor-pointer">
+                <input id="gist-remember-check" type="checkbox" class="rounded border-slate-300 text-teal-600 focus:ring-teal-500" />
+                <span>Remember token &amp; Gist ID on this browser</span>
+              </label>
+              <label class="inline-flex items-center gap-2 text-xs font-medium text-teal-800 cursor-pointer">
+                <input id="gist-autosync-check" type="checkbox" checked class="rounded border-slate-300 text-teal-600 focus:ring-teal-500" />
+                <span>Auto-sync in background (pull on open/focus, push 2.5s after edits)</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2 pt-1">
+            <button id="btn-gist-push" type="button" class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-lg transition">
+              <i data-lucide="cloud-upload" class="w-3.5 h-3.5"></i> Push to Cloud
+            </button>
+            <button id="btn-gist-pull" type="button" class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-teal-700 bg-teal-50 hover:bg-teal-100 border border-teal-200 rounded-lg transition">
+              <i data-lucide="cloud-download" class="w-3.5 h-3.5"></i> Pull &amp; Merge
+            </button>
+          </div>
+          <p id="gist-sync-feedback" class="text-xs text-slate-600 hidden"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gemini AI Modal -->
+  <div id="modal-ai" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs">
+    <div class="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-xl max-h-[88vh] flex flex-col overflow-hidden">
+      <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div class="p-1.5 rounded-lg bg-indigo-50 text-indigo-600">
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h2 class="text-base font-bold text-slate-900">Gemini AI Assistant</h2>
+            <p class="text-xs text-slate-500">Connect your Gemini API key for semantic linking, AI flashcards &amp; study help.</p>
+          </div>
+        </div>
+        <button id="btn-close-ai" type="button" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <div class="p-5 overflow-y-auto space-y-5">
+        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2.5">
+          <label for="gemini-key-input" class="block text-xs font-semibold text-slate-700">Gemini API Key (from Google AI Studio)</label>
+          <input id="gemini-key-input" type="password" placeholder="AIzaSy..." class="w-full px-3 py-2 text-xs sm:text-sm bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+          <label class="inline-flex items-center gap-2 text-xs text-slate-600 cursor-pointer">
+            <input id="gemini-remember-check" type="checkbox" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500" />
+            <span>Remember API key in this browser</span>
+          </label>
+        </div>
+
+        <div class="space-y-2.5">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">AI Actions for Active Note</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <button id="btn-ai-link-note" type="button" class="flex items-center gap-2 p-3 text-left rounded-xl border border-indigo-200 bg-indigo-50/60 hover:bg-indigo-100/70 transition">
+              <i data-lucide="share-2" class="w-4 h-4 text-indigo-600 shrink-0"></i>
+              <div>
+                <p class="text-xs font-semibold text-indigo-950">AI Auto-Link Content</p>
+                <p class="text-[11px] text-indigo-700">Connect sections, tables &amp; diagrams</p>
+              </div>
+            </button>
+            <button id="btn-ai-gen-cards" type="button" class="flex items-center gap-2 p-3 text-left rounded-xl border border-teal-200 bg-teal-50/60 hover:bg-teal-100/70 transition">
+              <i data-lucide="layers" class="w-4 h-4 text-teal-600 shrink-0"></i>
+              <div>
+                <p class="text-xs font-semibold text-teal-950">AI Generate Flashcards</p>
+                <p class="text-[11px] text-teal-700">Create high-yield board Q&amp;A cards</p>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <div class="space-y-2 pt-2 border-t border-slate-200">
+          <label for="ai-prompt-input" class="block text-xs font-semibold text-slate-700">Ask Gemini about this condition (e.g., "Draft pathophysiology" or "Suggest 3 differentials")</label>
+          <div class="flex gap-2">
+            <input id="ai-prompt-input" type="text" placeholder="Ask Gemini to draft or explain..." class="flex-1 px-3 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+            <button id="btn-ai-ask" type="button" class="px-4 py-2 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition shrink-0">Ask</button>
+          </div>
+          <div id="ai-response-box" class="hidden p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-700 whitespace-pre-line leading-relaxed max-h-52 overflow-y-auto"></div>
+        </div>
+        <p id="ai-status-msg" class="text-xs text-slate-500 hidden"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirmation Modal -->
+  <div id="modal-confirm" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs">
+    <div class="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-sm p-5 space-y-4">
+      <div class="flex items-start gap-3">
+        <div class="p-2 rounded-full bg-rose-50 text-rose-600 shrink-0">
+          <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h3 id="confirm-title" class="text-sm font-bold text-slate-900">Confirm Action</h3>
+          <p id="confirm-message" class="text-xs text-slate-600 mt-1">Are you sure?</p>
+        </div>
+      </div>
+      <div class="flex justify-end gap-2">
+        <button id="btn-confirm-cancel" type="button" class="px-3.5 py-1.5 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition">Cancel</button>
+        <button id="btn-confirm-ok" type="button" class="px-3.5 py-1.5 text-xs font-semibold text-white bg-rose-600 hover:bg-rose-700 rounded-lg transition">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Image Lightbox Modal -->
+  <div id="modal-lightbox" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-950/85 backdrop-blur-xs">
+    <button id="btn-close-lightbox" type="button" aria-label="Close image preview" class="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition">
+      <i data-lucide="x" class="w-6 h-6"></i>
+    </button>
+    <div class="max-w-4xl max-h-[90vh] flex flex-col items-center gap-3">
+      <img id="lightbox-img" src="" alt="Clinical attachment preview" class="max-w-full max-h-[80vh] rounded-xl shadow-2xl object-contain" />
+      <p id="lightbox-caption" class="text-sm text-slate-200 text-center"></p>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-4 right-4 z-50 hidden items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 text-white text-xs font-medium shadow-lg">
+    <span id="toast-message"></span>
+  </div>
+
+  <script>
+    /* =========================================================================
+       1. MODULAR CONFIGURATION & DEFAULT SCHEMA
+       Easily extend default fields or specialties here, or via the in-app UI.
+       ========================================================================= */
+    const DEFAULT_SCHEMA = {
+      specialties: [
+        'Retina & Vitreous',
+        'Glaucoma',
+        'Cornea & External Disease',
+        'Uveitis & Ocular Immunology',
+        'Neuro-Ophthalmology',
+        'Cataract & Refractive',
+        'Oculoplastics',
+        'Pediatric & Strabismus'
+      ],
+      fields: [
+        { id: 'summary', label: 'Clinical Summary & Etiology', type: 'textarea', placeholder: 'Describe ocular condition, systemic associations, and clinical overview...' },
+        { id: 'pathophysiology', label: 'Pathophysiology & Mechanism', type: 'textarea', placeholder: 'Detail cellular/vascular mechanisms, anatomical pathways, and disease progression...' },
+        { id: 'slitlamp', label: 'Slit-Lamp & Anterior Segment (OD / OS)', type: 'textarea', placeholder: 'Lids/lashes, conjunctiva, cornea, AC depth/cells/flare, iris, lens, IOP...' },
+        { id: 'fundus', label: 'Fundus, OCT & Imaging Findings', type: 'textarea', placeholder: 'Optic disc (C/D), macula, vessels, periphery, OCT RNFL/macula, FA, visual fields...' },
+        { id: 'differential', label: 'Differential Diagnosis', type: 'textarea', placeholder: 'List key ophthalmic differentials and distinguishing features...' },
+        { id: 'management', label: 'Management, Procedures & Follow-up', type: 'textarea', placeholder: 'Drops, intravitreal/laser/surgical plan, precautions, and follow-up interval...' }
+      ]
+    };
+
+    const IMAGING_MODALITIES = ['Fundus Photo', 'OCT Macula', 'OCT RNFL', 'Slit-Lamp', 'Fluorescein Angiography (FA)', 'Visual Field', 'Corneal Topography', 'B-Scan Ultrasound', 'Diagram / Schematic', 'Other'];
+
+    const INITIAL_NOTES = [];
+
+    /* =========================================================================
+       2. STORAGE ENGINE (IndexedDB primary + localStorage fallback)
+       ========================================================================= */
+    const DB_NAME = 'visiondesk_prod_v1_db';
+    const DB_VERSION = 1;
+    const STORE_NAME = 'app_state';
+    const LOCAL_FALLBACK_KEY = 'visiondesk_prod_v1_fallback';
+    const SYNC_CREDS_KEY = 'mednote_studio_sync_creds_v1';
+    const GEMINI_KEY_STORAGE = 'ophtho_note_gemini_key_v1';
+    const THEME_STORAGE_KEY = 'ophtho_note_theme_v1';
+    const BACKUP_PREFS_KEY = 'ophtho_note_backup_prefs_v1';
+
+    function openDatabase() {
+      return new Promise((resolve, reject) => {
+        if (!('indexedDB' in window)) {
+          reject(new Error('IndexedDB unavailable'));
+          return;
+        }
+        const req = indexedDB.open(DB_NAME, DB_VERSION);
+        req.onupgradeneeded = (e) => {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains(STORE_NAME)) {
+            db.createObjectStore(STORE_NAME);
+          }
+        };
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    async function loadAppState() {
+      try {
+        const db = await openDatabase();
+        const data = await new Promise((resolve, reject) => {
+          const tx = db.transaction(STORE_NAME, 'readonly');
+          const store = tx.objectStore(STORE_NAME);
+          const req = store.get('main');
+          req.onsuccess = () => resolve(req.result);
+          req.onerror = () => reject(req.error);
+        });
+        if (data && Array.isArray(data.notes) && data.schema) {
+          return data;
+        }
+      } catch (err) {
+        // Fallback to localStorage below
+      }
+      try {
+        const raw = localStorage.getItem(LOCAL_FALLBACK_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed && Array.isArray(parsed.notes) && parsed.schema) {
+            return parsed;
+          }
+        }
+      } catch (err) {
+        // Ignore storage restrictions
+      }
+      return {
+        schema: structuredClone(DEFAULT_SCHEMA),
+        notes: structuredClone(INITIAL_NOTES),
+        lastSyncedAt: null
+      };
+    }
+
+    async function saveAppState(payload) {
+      let savedInIDB = false;
+      try {
+        const db = await openDatabase();
+        await new Promise((resolve, reject) => {
+          const tx = db.transaction(STORE_NAME, 'readwrite');
+          const store = tx.objectStore(STORE_NAME);
+          const req = store.put(payload, 'main');
+          req.onsuccess = () => resolve();
+          req.onerror = () => reject(req.error);
+        });
+        savedInIDB = true;
+      } catch (err) {
+        // Fall through to localStorage
+      }
+      if (!savedInIDB) {
+        try {
+          localStorage.setItem(LOCAL_FALLBACK_KEY, JSON.stringify(payload));
+        } catch (err) {
+          // Storage quota exceeded or blocked
+        }
+      }
+    }
+
+    /* =========================================================================
+       3. APPLICATION STATE & HELPERS
+       ========================================================================= */
+    const state = {
+      schema: structuredClone(DEFAULT_SCHEMA),
+      notes: [],
+      activeNoteId: null,
+      searchQuery: '',
+      activeSpecialty: 'All',
+      activeTag: 'All',
+      sortBy: 'updated', // 'updated' | 'title' | 'tag'
+      lastSyncedAt: null,
+      viewMode: 'notes', // 'notes' | 'network' | 'lateral' | 'flashcards'
+      selectedNetworkNode: null, // { id: string }
+      networkView: { x: 0, y: 0, scale: 1 },
+      expandedNetworkNodes: {}, // { [nodeId]: true }
+      lateralMode: 'modality', // 'modality' | 'dimension'
+      lateralModality: 'OCT Macula',
+      lateralDimension: 'fundus',
+      studyFilter: 'all', // 'all' | 'due' | 'current'
+      studySpecialty: 'All',
+      studySearch: '',
+      studySubTab: 'study', // 'study' | 'manage'
+      studyIndex: 0,
+      studyFlipped: false,
+      studyReviewedCount: 0
+    };
+
+    let confirmCallback = null;
+    let toastTimer = null;
+
+    function uid(prefix = 'id') {
+      return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
+    }
+
+    function escapeHtml(str) {
+      return String(str ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function formatDate(iso) {
+      if (!iso) return 'Just now';
+      try {
+        return new Date(iso).toLocaleString(undefined, {
+          month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+        });
+      } catch {
+        return iso;
+      }
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      const label = document.getElementById('toast-message');
+      label.textContent = msg;
+      toast.classList.remove('hidden');
+      toast.classList.add('flex');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.add('hidden');
+        toast.classList.remove('flex');
+      }, 2800);
+    }
+
+    function openConfirm(title, message, okLabel, onConfirm) {
+      document.getElementById('confirm-title').textContent = title;
+      document.getElementById('confirm-message').textContent = message;
+      document.getElementById('btn-confirm-ok').textContent = okLabel || 'Delete';
+      confirmCallback = onConfirm;
+      const modal = document.getElementById('modal-confirm');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeConfirm() {
+      confirmCallback = null;
+      const modal = document.getElementById('modal-confirm');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    async function persistState(statusText = 'Saved locally') {
+      await saveAppState({
+        schema: state.schema,
+        notes: state.notes,
+        lastSyncedAt: state.lastSyncedAt
+      });
+      const label = document.getElementById('sync-status-label');
+      if (state.lastSyncedAt) {
+        label.textContent = `${statusText} • Cloud sync: ${formatDate(state.lastSyncedAt)}`;
+      } else {
+        label.textContent = `${statusText} • ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+      }
+      if (statusText !== 'Synced') {
+        scheduleAutoPush();
+      }
+    }
+
+    function getActiveNote() {
+      return state.notes.find(n => n.id === state.activeNoteId) || null;
+    }
+
+    function getFilteredNotes() {
+      const q = state.searchQuery.trim().toLowerCase();
+      const filtered = state.notes.filter(note => {
+        if (state.activeSpecialty !== 'All' && note.specialty !== state.activeSpecialty) {
+          return false;
+        }
+        if (state.activeTag !== 'All' && !(note.tags || []).includes(state.activeTag)) {
+          return false;
+        }
+        if (!q) return true;
+        const inTitle = (note.title || '').toLowerCase().includes(q);
+        const inTags = (note.tags || []).some(t => t.toLowerCase().includes(q));
+        const inFields = Object.values(note.fields || {}).some(v => String(v).toLowerCase().includes(q));
+        const inTables = (note.tables || []).some(t =>
+          (t.title || '').toLowerCase().includes(q) ||
+          (t.columns || []).some(c => c.toLowerCase().includes(q)) ||
+          (t.rows || []).some(r => r.some(cell => String(cell).toLowerCase().includes(q)))
+        );
+        return inTitle || inTags || inFields || inTables;
+      });
+
+      return filtered.sort((a, b) => {
+        if (state.sortBy === 'title') {
+          return (a.title || '').localeCompare(b.title || '');
+        }
+        if (state.sortBy === 'tag') {
+          const ta = (a.tags && a.tags[0]) ? a.tags[0] : 'zzz';
+          const tb = (b.tags && b.tags[0]) ? b.tags[0] : 'zzz';
+          return ta.localeCompare(tb) || (a.title || '').localeCompare(b.title || '');
+        }
+        return new Date(b.updatedAt || 0) - new Date(a.updatedAt || 0);
+      });
+    }
+
+    /* =========================================================================
+       4. SYNC ENGINE (Portable JSON + GitHub Gist Cloud Sync)
+       ========================================================================= */
+    function mergeNotesCollections(localNotes, remoteNotes) {
+      const map = new Map();
+      for (const n of localNotes) map.set(n.id, n);
+      for (const rn of remoteNotes) {
+        const existing = map.get(rn.id);
+        if (!existing || new Date(rn.updatedAt || 0) >= new Date(existing.updatedAt || 0)) {
+          map.set(rn.id, rn);
+        }
+      }
+      return Array.from(map.values()).sort((a, b) => new Date(b.updatedAt || 0) - new Date(a.updatedAt || 0));
+    }
+
+    function mergeSchemas(localSchema, remoteSchema) {
+      if (!remoteSchema) return localSchema;
+      const specSet = new Set([...(localSchema.specialties || []), ...(remoteSchema.specialties || [])]);
+      const fieldMap = new Map();
+      for (const f of (localSchema.fields || [])) fieldMap.set(f.id, f);
+      for (const f of (remoteSchema.fields || [])) {
+        if (!fieldMap.has(f.id)) fieldMap.set(f.id, f);
+      }
+      return {
+        specialties: Array.from(specSet),
+        fields: Array.from(fieldMap.values())
+      };
+    }
+
+    function getBackupPrefs() {
+      try {
+        const raw = localStorage.getItem(BACKUP_PREFS_KEY);
+        return raw ? JSON.parse(raw) : { intervalDays: 7, lastBackupAt: null };
+      } catch {
+        return { intervalDays: 7, lastBackupAt: null };
+      }
+    }
+
+    function saveBackupPrefs(prefs) {
+      try { localStorage.setItem(BACKUP_PREFS_KEY, JSON.stringify(prefs)); } catch {}
+    }
+
+    async function saveRollingSnapshot() {
+      try {
+        const db = await openDatabase();
+        await new Promise((resolve, reject) => {
+          const tx = db.transaction(STORE_NAME, 'readwrite');
+          tx.objectStore(STORE_NAME).put({
+            savedAt: new Date().toISOString(),
+            schema: state.schema,
+            notes: state.notes
+          }, 'rolling_snapshot');
+          tx.oncomplete = () => resolve();
+          tx.onerror = () => reject(tx.error);
+        });
+      } catch {}
+    }
+
+    async function restoreRollingSnapshot() {
+      try {
+        const db = await openDatabase();
+        const snap = await new Promise((resolve, reject) => {
+          const tx = db.transaction(STORE_NAME, 'readonly');
+          const req = tx.objectStore(STORE_NAME).get('rolling_snapshot');
+          req.onsuccess = () => resolve(req.result);
+          req.onerror = () => reject(req.error);
+        });
+        if (!snap || !Array.isArray(snap.notes)) {
+          showToast('No auto-snapshot saved yet');
+          return;
+        }
+        state.notes = snap.notes;
+        if (snap.schema) state.schema = snap.schema;
+        state.activeNoteId = state.notes[0]?.id || null;
+        await persistState('Restored snapshot');
+        renderAll();
+        closeSyncModal();
+        showToast(`Restored snapshot from ${formatDate(snap.savedAt)}`);
+      } catch {
+        showToast('Could not restore snapshot');
+      }
+    }
+
+    function checkAutoBackupDue() {
+      const prefs = getBackupPrefs();
+      const selectEl = document.getElementById('backup-interval-select');
+      const labelEl = document.getElementById('last-backup-label');
+      if (selectEl) selectEl.value = String(prefs.intervalDays ?? 7);
+      if (labelEl) labelEl.textContent = `Last backup: ${prefs.lastBackupAt ? formatDate(prefs.lastBackupAt) : 'Never'}`;
+
+      const days = Number(prefs.intervalDays || 0);
+      if (days <= 0) return;
+      const last = prefs.lastBackupAt ? new Date(prefs.lastBackupAt).getTime() : 0;
+      const dueMs = days * 24 * 60 * 60 * 1000;
+      if (Date.now() - last >= dueMs) {
+        saveRollingSnapshot();
+        prefs.lastBackupAt = new Date().toISOString();
+        saveBackupPrefs(prefs);
+        if (labelEl) labelEl.textContent = `Last backup: ${formatDate(prefs.lastBackupAt)}`;
+      }
+    }
+
+    function exportJsonBundle() {
+      const bundle = {
+        app: 'VisionDesk',
+        version: 1,
+        exportedAt: new Date().toISOString(),
+        schema: state.schema,
+        notes: state.notes
+      };
+      const blob = new Blob([JSON.stringify(bundle, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `visiondesk-backup-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      const prefs = getBackupPrefs();
+      prefs.lastBackupAt = new Date().toISOString();
+      saveBackupPrefs(prefs);
+      saveRollingSnapshot();
+      checkAutoBackupDue();
+      showToast('Exported full backup JSON');
+    }
+
+    function handleImportJson(file, mode) {
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          if (!parsed || !Array.isArray(parsed.notes)) {
+            showToast('Invalid MedNote backup file');
+            return;
+          }
+          if (mode === 'replace') {
+            state.notes = parsed.notes;
+            if (parsed.schema) state.schema = parsed.schema;
+          } else {
+            state.notes = mergeNotesCollections(state.notes, parsed.notes);
+            state.schema = mergeSchemas(state.schema, parsed.schema);
+          }
+          state.activeNoteId = state.notes[0]?.id || null;
+          await persistState('Imported backup');
+          renderAll();
+          closeSyncModal();
+          showToast(mode === 'replace' ? 'Replaced notes from backup' : 'Merged notes from backup');
+        } catch {
+          showToast('Could not parse JSON file');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    let autoPushTimer = null;
+    let isAutoSyncing = false;
+
+    function getSavedSyncCreds() {
+      try {
+        const raw = localStorage.getItem(SYNC_CREDS_KEY);
+        return raw ? JSON.parse(raw) : null;
+      } catch {
+        return null;
+      }
+    }
+
+    function saveSyncCredsIfChecked() {
+      const remember = document.getElementById('gist-remember-check').checked;
+      const autoSync = document.getElementById('gist-autosync-check').checked;
+      const token = document.getElementById('gist-token-input').value.trim();
+      const gistId = document.getElementById('gist-id-input').value.trim();
+      try {
+        if (remember) {
+          localStorage.setItem(SYNC_CREDS_KEY, JSON.stringify({ token, gistId, autoSync }));
+        } else {
+          localStorage.removeItem(SYNC_CREDS_KEY);
+        }
+      } catch {
+        // Ignore storage errors
+      }
+    }
+
+    function loadSyncCreds() {
+      try {
+        const creds = getSavedSyncCreds();
+        if (creds) {
+          document.getElementById('gist-token-input').value = creds.token || '';
+          document.getElementById('gist-id-input').value = creds.gistId || '';
+          document.getElementById('gist-remember-check').checked = true;
+          document.getElementById('gist-autosync-check').checked = creds.autoSync !== false;
+        }
+      } catch {
+        // Ignore
+      }
+    }
+
+    function scheduleAutoPush() {
+      const creds = getSavedSyncCreds();
+      if (!creds || !creds.token || !creds.gistId || creds.autoSync === false) return;
+      clearTimeout(autoPushTimer);
+      autoPushTimer = setTimeout(() => {
+        runBackgroundPush(creds.token, creds.gistId);
+      }, 2500);
+    }
+
+    async function runBackgroundPush(token, gistId) {
+      if (isAutoSyncing) return;
+      isAutoSyncing = true;
+      const statusEl = document.getElementById('sync-status-label');
+      if (statusEl) statusEl.textContent = 'Auto-syncing to cloud...';
+      try {
+        const res = await fetch(`https://api.github.com/gists/${encodeURIComponent(gistId)}`, {
+          method: 'PATCH',
+          headers: {
+            'Accept': 'application/vnd.github+json',
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            files: {
+              'mednote-studio-sync.json': {
+                content: JSON.stringify({
+                  version: 1,
+                  syncedAt: new Date().toISOString(),
+                  schema: state.schema,
+                  notes: state.notes
+                }, null, 2)
+              }
+            }
+          })
+        });
+        if (res.ok) {
+          state.lastSyncedAt = new Date().toISOString();
+          await saveAppState({ schema: state.schema, notes: state.notes, lastSyncedAt: state.lastSyncedAt });
+          if (statusEl) statusEl.textContent = `Synced • ${formatDate(state.lastSyncedAt)}`;
+        }
+      } catch {
+        // Silent fallback to local IndexedDB
+      } finally {
+        isAutoSyncing = false;
+      }
+    }
+
+    async function runBackgroundPull() {
+      const creds = getSavedSyncCreds();
+      if (!creds || !creds.gistId || creds.autoSync === false || isAutoSyncing) return;
+      isAutoSyncing = true;
+      const statusEl = document.getElementById('sync-status-label');
+      if (statusEl) statusEl.textContent = 'Checking cloud for updates...';
+      try {
+        const headers = { 'Accept': 'application/vnd.github+json' };
+        if (creds.token) headers['Authorization'] = `Bearer ${creds.token}`;
+        const res = await fetch(`https://api.github.com/gists/${encodeURIComponent(creds.gistId)}`, { headers, cache: 'no-store' });
+        if (!res.ok) return;
+        const data = await res.json();
+        const fileObj = data.files && data.files['mednote-studio-sync.json'];
+        if (!fileObj || !fileObj.content) return;
+        const parsed = JSON.parse(fileObj.content);
+        state.notes = mergeNotesCollections(state.notes, parsed.notes || []);
+        state.schema = mergeSchemas(state.schema, parsed.schema);
+        if (!state.activeNoteId && state.notes.length) state.activeNoteId = state.notes[0].id;
+        state.lastSyncedAt = new Date().toISOString();
+        await saveAppState({ schema: state.schema, notes: state.notes, lastSyncedAt: state.lastSyncedAt });
+        renderAll();
+        if (statusEl) statusEl.textContent = `Synced • ${formatDate(state.lastSyncedAt)}`;
+      } catch {
+        // Offline / error fallback
+      } finally {
+        isAutoSyncing = false;
+      }
+    }
+
+    function setGistFeedback(msg, isError = false) {
+      const el = document.getElementById('gist-sync-feedback');
+      el.textContent = msg;
+      el.classList.remove('hidden', 'text-rose-600', 'text-teal-700');
+      el.classList.add(isError ? 'text-rose-600' : 'text-teal-700');
+    }
+
+    async function pushToGist() {
+      const token = document.getElementById('gist-token-input').value.trim();
+      const gistId = document.getElementById('gist-id-input').value.trim();
+      if (!token) {
+        setGistFeedback('Please enter your GitHub Personal Access Token.', true);
+        return;
+      }
+      saveSyncCredsIfChecked();
+      setGistFeedback('Pushing notes to GitHub Gist...');
+      const payload = {
+        description: 'VisionDesk — Ophthalmology Notes Sync',
+        public: false,
+        files: {
+          'mednote-studio-sync.json': {
+            content: JSON.stringify({
+              version: 1,
+              syncedAt: new Date().toISOString(),
+              schema: state.schema,
+              notes: state.notes
+            }, null, 2)
+          }
+        }
+      };
+      try {
+        const url = gistId ? `https://api.github.com/gists/${encodeURIComponent(gistId)}` : 'https://api.github.com/gists';
+        const method = gistId ? 'PATCH' : 'POST';
+        const res = await fetch(url, {
+          method,
+          headers: {
+            'Accept': 'application/vnd.github+json',
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.message || `HTTP ${res.status}`);
+        }
+        const data = await res.json();
+        document.getElementById('gist-id-input').value = data.id;
+        saveSyncCredsIfChecked();
+        state.lastSyncedAt = new Date().toISOString();
+        await persistState('Synced');
+        setGistFeedback(`Pushed successfully! Gist ID: ${data.id}`);
+        showToast('Cloud sync push complete');
+      } catch (err) {
+        setGistFeedback(`Push failed: ${err.message}`, true);
+      }
+    }
+
+    async function pullFromGist() {
+      const token = document.getElementById('gist-token-input').value.trim();
+      const gistId = document.getElementById('gist-id-input').value.trim();
+      if (!gistId) {
+        setGistFeedback('Please enter the Gist ID to pull from.', true);
+        return;
+      }
+      saveSyncCredsIfChecked();
+      setGistFeedback('Pulling notes from GitHub Gist...');
+      try {
+        const headers = { 'Accept': 'application/vnd.github+json' };
+        if (token) headers['Authorization'] = `Bearer ${token}`;
+        const res = await fetch(`https://api.github.com/gists/${encodeURIComponent(gistId)}`, { headers });
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.message || `HTTP ${res.status}`);
+        }
+        const data = await res.json();
+        const fileObj = data.files && data.files['mednote-studio-sync.json'];
+        if (!fileObj || !fileObj.content) {
+          throw new Error('mednote-studio-sync.json not found in this Gist.');
+        }
+        const parsed = JSON.parse(fileObj.content);
+        state.notes = mergeNotesCollections(state.notes, parsed.notes || []);
+        state.schema = mergeSchemas(state.schema, parsed.schema);
+        if (!state.activeNoteId && state.notes.length) {
+          state.activeNoteId = state.notes[0].id;
+        }
+        state.lastSyncedAt = new Date().toISOString();
+        await persistState('Synced');
+        renderAll();
+        setGistFeedback(`Pulled & merged ${parsed.notes?.length || 0} remote notes.`);
+        showToast('Cloud sync pull complete');
+      } catch (err) {
+        setGistFeedback(`Pull failed: ${err.message}`, true);
+      }
+    }
+
+    /* =========================================================================
+       4B. SMART DROP PARSERS (CSV / TSV / HTML TABLES) & FLASHCARD ENGINE
+       ========================================================================= */
+    function parseDelimitedTable(text, delimiter) {
+      const lines = text.trim().split(/\r?\n/).filter(l => l.trim().length > 0);
+      if (lines.length < 1) return null;
+      const rows = lines.map(line => {
+        if (delimiter === ',') {
+          // Simple CSV parser supporting quoted commas
+          const out = [];
+          let cur = '';
+          let inQ = false;
+          for (let i = 0; i < line.length; i++) {
+            const ch = line[i];
+            if (ch === '"') { inQ = !inQ; }
+            else if (ch === ',' && !inQ) { out.push(cur.trim()); cur = ''; }
+            else { cur += ch; }
+          }
+          out.push(cur.trim());
+          return out;
+        }
+        return line.split(delimiter).map(c => c.trim());
+      });
+      const maxCols = Math.max(...rows.map(r => r.length));
+      if (maxCols < 2 && rows.length < 2) return null;
+      const columns = rows[0].map((c, idx) => c || `Column ${idx + 1}`);
+      while (columns.length < maxCols) columns.push(`Column ${columns.length + 1}`);
+      const bodyRows = rows.slice(1).map(r => {
+        const padded = [...r];
+        while (padded.length < maxCols) padded.push('');
+        return padded.slice(0, maxCols);
+      });
+      if (bodyRows.length === 0) bodyRows.push(columns.map(() => ''));
+      return { columns, rows: bodyRows };
+    }
+
+    function parseMarkdownTable(text) {
+      const lines = text.trim().split(/\r?\n/).map(l => l.trim()).filter(l => l.includes('|'));
+      if (lines.length < 2) return null;
+      const splitRow = (line) => line.replace(/^\|/, '').replace(/\|$/, '').split('|').map(c => c.trim());
+      const columns = splitRow(lines[0]);
+      if (columns.length < 2) return null;
+      const bodyStart = /^[\s|:-]+$/.test(lines[1]) ? 2 : 1;
+      const rows = lines.slice(bodyStart).map(splitRow).filter(r => r.some(Boolean));
+      if (!rows.length) rows.push(columns.map(() => ''));
+      const maxCols = Math.max(columns.length, ...rows.map(r => r.length));
+      while (columns.length < maxCols) columns.push(`Column ${columns.length + 1}`);
+      const normRows = rows.map(r => {
+        const p = [...r];
+        while (p.length < maxCols) p.push('');
+        return p.slice(0, maxCols);
+      });
+      return { columns, rows: normRows };
+    }
+
+    function parseHtmlTable(htmlString) {
+      try {
+        const doc = new DOMParser().parseFromString(htmlString, 'text/html');
+        const table = doc.querySelector('table');
+        if (!table) return null;
+        const trs = Array.from(table.querySelectorAll('tr'));
+        if (!trs.length) return null;
+        const parsedRows = trs.map(tr =>
+          Array.from(tr.querySelectorAll('th, td')).map(cell => cell.textContent.trim())
+        ).filter(r => r.length > 0);
+        if (!parsedRows.length) return null;
+        const maxCols = Math.max(...parsedRows.map(r => r.length));
+        const columns = parsedRows[0].map((c, idx) => c || `Column ${idx + 1}`);
+        while (columns.length < maxCols) columns.push(`Column ${columns.length + 1}`);
+        const bodyRows = parsedRows.slice(1).map(r => {
+          const padded = [...r];
+          while (padded.length < maxCols) padded.push('');
+          return padded.slice(0, maxCols);
+        });
+        if (!bodyRows.length) bodyRows.push(columns.map(() => ''));
+        return { columns, rows: bodyRows };
+      } catch {
+        return null;
+      }
+    }
+
+    function incorporateTableIntoNote(note, parsed, title = 'Imported Classification Table') {
+      if (!note || !parsed) return false;
+      note.tables = note.tables || [];
+      note.tables.push({
+        id: uid('tbl'),
+        title,
+        columns: parsed.columns,
+        rows: parsed.rows
+      });
+      note.updatedAt = new Date().toISOString();
+      return true;
+    }
+
+    function processSmartDrop(dataTransfer) {
+      const note = getActiveNote();
+      if (!note || !dataTransfer) return;
+
+      const files = Array.from(dataTransfer.files || []);
+      const imgFiles = files.filter(f => f.type.startsWith('image/'));
+      const tableFiles = files.filter(f =>
+        f.name.endsWith('.csv') || f.name.endsWith('.tsv') || f.type === 'text/csv' || f.type === 'text/tab-separated-values'
+      );
+
+      if (imgFiles.length) {
+        processImageFiles(imgFiles);
+      }
+
+      if (tableFiles.length) {
+        tableFiles.forEach(file => {
+          const reader = new FileReader();
+          reader.onload = async (ev) => {
+            const text = String(ev.target.result || '');
+            const delim = file.name.endsWith('.tsv') ? '\t' : ',';
+            const parsed = parseDelimitedTable(text, delim);
+            if (parsed && incorporateTableIntoNote(note, parsed, file.name.replace(/\.[^.]+$/, ''))) {
+              await persistState();
+              renderAll();
+              showToast(`Imported table "${file.name}"`);
+            } else {
+              showToast(`Could not parse table from ${file.name}`);
+            }
+          };
+          reader.readAsText(file);
+        });
+        return;
+      }
+
+      // Check dropped HTML or plain text (e.g. dragged from spreadsheet, Markdown, or web table)
+      if (!imgFiles.length) {
+        const html = dataTransfer.getData('text/html');
+        const plain = dataTransfer.getData('text/plain');
+        let parsed = html ? parseHtmlTable(html) : null;
+        if (!parsed && plain) {
+          if (plain.includes('|') && plain.includes('\n')) parsed = parseMarkdownTable(plain);
+          if (!parsed && plain.includes('\t')) parsed = parseDelimitedTable(plain, '\t');
+          if (!parsed && plain.includes(',')) parsed = parseDelimitedTable(plain, ',');
+        }
+        if (parsed && incorporateTableIntoNote(note, parsed, 'Dropped Classification Table')) {
+          persistState();
+          renderAll();
+          showToast('Table adapted & added to note');
+        }
+      }
+    }
+
+    function getAllFlashcards() {
+      const cards = [];
+      for (const note of state.notes) {
+        for (const c of (note.flashcards || [])) {
+          cards.push({ ...c, noteId: note.id, noteTitle: note.title, specialty: note.specialty });
+        }
+      }
+      return cards;
+    }
+
+    function isCardDue(card) {
+      if (!card.nextReviewAt) return true;
+      return new Date(card.nextReviewAt) <= new Date();
+    }
+
+    function getStudyQueue() {
+      let cards = getAllFlashcards();
+      if (state.studyFilter === 'current' && state.activeNoteId) {
+        cards = cards.filter(c => c.noteId === state.activeNoteId);
+      } else if (state.studyFilter === 'due') {
+        cards = cards.filter(isCardDue);
+      }
+      if (state.studySpecialty !== 'All') {
+        cards = cards.filter(c => c.specialty === state.studySpecialty);
+      }
+      if (state.studySearch.trim()) {
+        const q = state.studySearch.trim().toLowerCase();
+        cards = cards.filter(c =>
+          c.front.toLowerCase().includes(q) ||
+          c.back.toLowerCase().includes(q) ||
+          (c.noteTitle || '').toLowerCase().includes(q)
+        );
+      }
+      return cards;
+    }
+
+    function autoGenerateFlashcardsForNote(note) {
+      if (!note) return 0;
+      note.flashcards = note.flashcards || [];
+      const existingFronts = new Set(note.flashcards.map(c => c.front.trim().toLowerCase()));
+      let added = 0;
+
+      const addCard = (front, back, imageId = null) => {
+        const key = front.trim().toLowerCase();
+        if (!front.trim() || !back.trim() || existingFronts.has(key)) return;
+        existingFronts.add(key);
+        note.flashcards.push({
+          id: uid('fc'),
+          front: front.trim(),
+          back: back.trim(),
+          imageId,
+          intervalDays: 0,
+          ease: 2.5,
+          reps: 0,
+          nextReviewAt: new Date().toISOString()
+        });
+        added++;
+      };
+
+      if (note.fields?.pathophysiology) {
+        addCard(`${note.title}: Pathophysiology & Mechanism`, note.fields.pathophysiology, note.images?.[0]?.id || null);
+      }
+      if (note.fields?.slitlamp) {
+        addCard(`${note.title}: Slit-Lamp & Anterior Segment Findings`, note.fields.slitlamp);
+      }
+      if (note.fields?.fundus) {
+        addCard(`${note.title}: Fundus, OCT & Imaging Findings`, note.fields.fundus);
+      }
+      if (note.fields?.management) {
+        addCard(`${note.title}: Management & Follow-up`, note.fields.management);
+      }
+      for (const sec of (note.customSections || [])) {
+        if (sec.content && sec.content.trim()) {
+          const linkedImg = (note.links?.[sec.id] || []).find(l => l.type === 'image');
+          addCard(`${note.title}: ${sec.title}`, sec.content, linkedImg?.id || null);
+        }
+      }
+      for (const img of (note.images || [])) {
+        if (img.caption && img.caption.trim()) {
+          addCard(`Spot Diagnosis (${img.modality || 'Imaging'}): ${note.title}`, img.caption, img.id);
+        }
+      }
+      for (const tbl of (note.tables || [])) {
+        for (const row of (tbl.rows || [])) {
+          if (row[0] && row.slice(1).some(Boolean)) {
+            const front = `${tbl.title} — ${row[0]}`;
+            const back = tbl.columns.slice(1).map((col, idx) => `${col}: ${row[idx + 1] || '—'}`).join('\n');
+            addCard(front, back);
+          }
+        }
+      }
+      if (added > 0) {
+        note.updatedAt = new Date().toISOString();
+      }
+      return added;
+    }
+
+    function rateFlashcard(noteId, cardId, quality) {
+      // quality: 1 (Again), 2 (Hard), 3 (Good), 4 (Easy)
+      const note = state.notes.find(n => n.id === noteId);
+      const card = note?.flashcards?.find(c => c.id === cardId);
+      if (!card) return;
+
+      let interval = card.intervalDays || 0;
+      let ease = card.ease || 2.5;
+      let reps = card.reps || 0;
+
+      if (quality === 1) {
+        reps = 0;
+        interval = 0;
+        ease = Math.max(1.3, ease - 0.2);
+      } else {
+        if (reps === 0) interval = 1;
+        else if (reps === 1) interval = 3;
+        else interval = Math.round(interval * ease);
+
+        if (quality === 2) interval = Math.max(1, Math.round(interval * 0.7));
+        if (quality === 4) interval = Math.max(2, Math.round(interval * 1.3));
+        ease = Math.max(1.3, ease + (quality === 4 ? 0.15 : quality === 2 ? -0.1 : 0));
+        reps += 1;
+      }
+
+      const nextDate = new Date();
+      if (interval > 0) nextDate.setDate(nextDate.getDate() + interval);
+      else nextDate.setMinutes(nextDate.getMinutes() + 10);
+
+      card.intervalDays = interval;
+      card.ease = ease;
+      card.reps = reps;
+      card.nextReviewAt = nextDate.toISOString();
+
+      state.studyReviewedCount += 1;
+      state.studyFlipped = false;
+      const queue = getStudyQueue();
+      if (queue.length > 0) {
+        state.studyIndex = (state.studyIndex + 1) % queue.length;
+      } else {
+        state.studyIndex = 0;
+      }
+      persistState();
+      renderAll();
+    }
+
+    /* =========================================================================
+       4C. GEMINI AI ENGINE (Client-side BYO API Key)
+       ========================================================================= */
+    function getGeminiApiKey() {
+      const inp = document.getElementById('gemini-key-input');
+      if (inp && inp.value.trim()) return inp.value.trim();
+      try { return localStorage.getItem(GEMINI_KEY_STORAGE) || ''; } catch { return ''; }
+    }
+
+    function saveGeminiKeyIfChecked() {
+      const remember = document.getElementById('gemini-remember-check')?.checked;
+      const key = document.getElementById('gemini-key-input')?.value.trim() || '';
+      try {
+        if (remember && key) localStorage.setItem(GEMINI_KEY_STORAGE, key);
+        else localStorage.removeItem(GEMINI_KEY_STORAGE);
+      } catch {}
+    }
+
+    function loadGeminiKey() {
+      try {
+        const k = localStorage.getItem(GEMINI_KEY_STORAGE);
+        if (k) {
+          document.getElementById('gemini-key-input').value = k;
+          document.getElementById('gemini-remember-check').checked = true;
+        }
+      } catch {}
+    }
+
+    function setAiStatus(msg, isError = false) {
+      const el = document.getElementById('ai-status-msg');
+      if (!el) return;
+      el.textContent = msg;
+      el.classList.remove('hidden', 'text-rose-600', 'text-indigo-700');
+      el.classList.add(isError ? 'text-rose-600' : 'text-indigo-700');
+    }
+
+    async function callGemini(promptText, expectJson = false) {
+      const apiKey = getGeminiApiKey();
+      if (!apiKey) {
+        throw new Error('Please enter your Gemini API key first.');
+      }
+      saveGeminiKeyIfChecked();
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`;
+      const body = {
+        contents: [{ parts: [{ text: promptText }] }],
+        ...(expectJson ? { generationConfig: { responseMimeType: 'application/json' } } : {})
+      };
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err?.error?.message || `HTTP ${res.status}`);
+      }
+      const data = await res.json();
+      const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+      if (!text) throw new Error('Empty response from Gemini.');
+      return text;
+    }
+
+    async function runAiAutoLink(note) {
+      if (!note) return;
+      const sections = [
+        ...state.schema.fields.map(f => ({ id: f.id, label: f.label, text: note.fields?.[f.id] || '' })),
+        ...(note.customSections || []).map(c => ({ id: c.id, label: c.title, text: c.content || '' }))
+      ].filter(x => x.text.trim());
+      const targets = [
+        ...(note.tables || []).map(t => ({ type: 'table', id: t.id, title: t.title })),
+        ...(note.images || []).map(i => ({ type: 'image', id: i.id, title: `${i.caption || ''} (${i.modality || ''})` }))
+      ];
+      if (!sections.length || !targets.length) {
+        showToast('Add sections and tables/diagrams first');
+        return;
+      }
+      setAiStatus('Asking Gemini to link related sections, tables, and diagrams...');
+      try {
+        const prompt = `Given these ophthalmology note sections: ${JSON.stringify(sections)} and these targets: ${JSON.stringify(targets)}. Return a JSON array of objects {"sectionId": string, "type": "table"|"image", "id": string} linking each relevant target to the best matching sectionId.`;
+        const raw = await callGemini(prompt, true);
+        const linksArr = JSON.parse(raw);
+        let added = 0;
+        note.links = note.links || {};
+        if (Array.isArray(linksArr)) {
+          for (const item of linksArr) {
+            if (!item.sectionId || !item.type || !item.id) continue;
+            note.links[item.sectionId] = note.links[item.sectionId] || [];
+            if (!note.links[item.sectionId].some(l => l.type === item.type && l.id === item.id)) {
+              note.links[item.sectionId].push({ type: item.type, id: item.id });
+              added++;
+            }
+          }
+        }
+        await persistState();
+        renderAll();
+        setAiStatus(`Gemini linked ${added} new connection${added === 1 ? '' : 's'}.`);
+        showToast(`AI linked ${added} item${added === 1 ? '' : 's'}`);
+      } catch (err) {
+        setAiStatus(`AI Auto-Link failed: ${err.message}`, true);
+      }
+    }
+
+    async function runAiGenerateFlashcards(note) {
+      if (!note) return;
+      setAiStatus('Generating high-yield ophthalmology flashcards with Gemini...');
+      try {
+        const context = {
+          title: note.title,
+          specialty: note.specialty,
+          fields: note.fields,
+          tables: note.tables
+        };
+        const prompt = `Create 4 concise, high-yield ophthalmology board-style flashcards from this note: ${JSON.stringify(context)}. Return a JSON array of {"front": string, "back": string}.`;
+        const raw = await callGemini(prompt, true);
+        const cards = JSON.parse(raw);
+        let added = 0;
+        note.flashcards = note.flashcards || [];
+        const existing = new Set(note.flashcards.map(c => c.front.trim().toLowerCase()));
+        if (Array.isArray(cards)) {
+          for (const c of cards) {
+            if (c.front && c.back && !existing.has(c.front.trim().toLowerCase())) {
+              note.flashcards.push({
+                id: uid('fc'),
+                front: c.front.trim(),
+                back: c.back.trim(),
+                imageId: null,
+                intervalDays: 0,
+                ease: 2.5,
+                reps: 0,
+                nextReviewAt: new Date().toISOString()
+              });
+              added++;
+            }
+          }
+        }
+        await persistState();
+        renderAll();
+        setAiStatus(`Added ${added} AI-generated flashcard${added === 1 ? '' : 's'}.`);
+        showToast(`Added ${added} AI flashcards`);
+      } catch (err) {
+        setAiStatus(`AI Flashcards failed: ${err.message}`, true);
+      }
+    }
+
+    /* =========================================================================
+       5. UI RENDERING
+       ========================================================================= */
+    function renderSidebar() {
+      // Specialty filter pills
+      const filtersEl = document.getElementById('specialty-filters');
+      const specialties = ['All', ...state.schema.specialties];
+      filtersEl.innerHTML = specialties.map(spec => {
+        const active = spec === state.activeSpecialty;
+        return `<button type="button" data-filter-spec="${escapeHtml(spec)}" class="px-2.5 py-1 rounded-full text-[11px] font-medium whitespace-nowrap transition ${
+          active ? 'bg-teal-600 text-white shadow-xs' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+        }">${escapeHtml(spec)}</button>`;
+      }).join('');
+
+      // Populate tag filter dropdown
+      const allTags = Array.from(new Set(state.notes.flatMap(n => n.tags || []))).sort((a, b) => a.localeCompare(b));
+      const tagSelect = document.getElementById('tag-filter-select');
+      if (tagSelect) {
+        tagSelect.innerHTML = `<option value="All">All Tags (${allTags.length})</option>` +
+          allTags.map(t => `<option value="${escapeHtml(t)}" ${state.activeTag === t ? 'selected' : ''}>#${escapeHtml(t)}</option>`).join('');
+      }
+      const sortSelect = document.getElementById('sort-notes-select');
+      if (sortSelect) sortSelect.value = state.sortBy;
+
+      // Notes list
+      const listEl = document.getElementById('notes-list');
+      const filtered = getFilteredNotes();
+      document.getElementById('notes-count-label').textContent = `${filtered.length} of ${state.notes.length} notes`;
+
+      if (filtered.length === 0) {
+        listEl.innerHTML = `
+          <div class="p-6 text-center space-y-2">
+            <p class="text-xs text-slate-500">No matching condition notes.</p>
+            <button id="btn-empty-new-note" type="button" class="text-xs font-semibold text-teal-600 hover:underline">+ Create a new note</button>
+          </div>
+        `;
+        return;
+      }
+
+      listEl.innerHTML = filtered.map(note => {
+        const isActive = note.id === state.activeNoteId;
+        const tblCount = (note.tables || []).length;
+        const imgCount = (note.images || []).length;
+        return `
+          <button type="button" data-select-note="${escapeHtml(note.id)}" class="w-full text-left p-3 rounded-xl border transition ${
+            isActive
+              ? 'bg-teal-50/70 border-teal-300 shadow-xs'
+              : 'bg-white border-transparent hover:border-slate-200 hover:bg-slate-50'
+          }">
+            <div class="flex items-start justify-between gap-2">
+              <h3 class="text-xs sm:text-sm font-semibold text-slate-900 line-clamp-1">${escapeHtml(note.title || 'Untitled Condition')}</h3>
+            </div>
+            <div class="flex flex-wrap items-center gap-1.5 mt-1.5 text-[11px] text-slate-500">
+              <span class="px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 font-medium">${escapeHtml(note.specialty || 'General')}</span>
+              ${tblCount ? `<span>${tblCount} tbl</span>` : ''}
+              ${imgCount ? `<span>${imgCount} img</span>` : ''}
+              ${(note.tags || []).slice(0, 2).map(t => `<span class="text-[10px] text-teal-700 bg-teal-50 px-1.5 py-0.2 rounded">#${escapeHtml(t)}</span>`).join('')}
+            </div>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function renderEditor() {
+      const container = document.getElementById('editor-container');
+      const note = getActiveNote();
+
+      if (!note) {
+        container.innerHTML = `
+          <div class="bg-white rounded-2xl border border-slate-200 p-10 text-center space-y-3">
+            <div class="w-12 h-12 rounded-2xl bg-teal-50 text-teal-600 mx-auto flex items-center justify-center">
+              <i data-lucide="file-plus-2" class="w-6 h-6"></i>
+            </div>
+            <h2 class="text-base font-bold text-slate-900">No Condition Note Selected</h2>
+            <p class="text-xs sm:text-sm text-slate-500 max-w-md mx-auto">Select a note from the sidebar or create a new condition note with classification tables and clinical images.</p>
+            <button id="btn-create-first-note" type="button" class="inline-flex items-center gap-1.5 px-4 py-2 text-xs sm:text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 rounded-lg transition">
+              <i data-lucide="plus" class="w-4 h-4"></i> Create Condition Note
+            </button>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      const specialtyOptions = state.schema.specialties.map(s =>
+        `<option value="${escapeHtml(s)}" ${note.specialty === s ? 'selected' : ''}>${escapeHtml(s)}</option>`
+      ).join('');
+
+
+
+      const renderSectionLinks = (sectionKey) => {
+        const linked = (note.links && note.links[sectionKey]) || [];
+        const availableTables = (note.tables || []).filter(t => !linked.some(l => l.type === 'table' && l.id === t.id));
+        const availableImages = (note.images || []).filter(i => !linked.some(l => l.type === 'image' && l.id === i.id));
+
+        const linkOptions = [
+          ...availableImages.map(i => `<option value="image:${escapeHtml(i.id)}">Diagram/Img: ${escapeHtml(i.caption || 'Untitled')}</option>`),
+          ...availableTables.map(t => `<option value="table:${escapeHtml(t.id)}">Table: ${escapeHtml(t.title || 'Untitled')}</option>`)
+        ].join('');
+
+        const linkedCards = linked.map(l => {
+          if (l.type === 'image') {
+            const img = (note.images || []).find(i => i.id === l.id);
+            if (!img) return '';
+            return `
+              <div class="inline-flex items-center gap-2.5 p-2 pr-2.5 rounded-xl bg-teal-50/70 border border-teal-200 max-w-full">
+                <img src="${img.dataUrl}" alt="${escapeHtml(img.caption)}" data-zoom-img="${escapeHtml(img.id)}" class="w-11 h-11 rounded-lg object-cover cursor-pointer border border-teal-200 shrink-0" />
+                <div class="min-w-0">
+                  <p class="text-xs font-semibold text-slate-800 truncate">${escapeHtml(img.caption || 'Diagram')}</p>
+                  <span class="text-[10px] font-medium text-teal-700">${escapeHtml(img.modality || 'Diagram')}</span>
+                </div>
+                <button type="button" data-unlink-item="${escapeHtml(sectionKey)}|image|${escapeHtml(img.id)}" title="Unlink" class="p-1 text-slate-400 hover:text-rose-600 rounded shrink-0">
+                  <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                </button>
+              </div>
+            `;
+          }
+          if (l.type === 'table') {
+            const tbl = (note.tables || []).find(t => t.id === l.id);
+            if (!tbl) return '';
+            return `
+              <div class="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-indigo-50/70 border border-indigo-200 max-w-full">
+                <i data-lucide="table-2" class="w-4 h-4 text-indigo-600 shrink-0"></i>
+                <div class="min-w-0">
+                  <p class="text-xs font-semibold text-indigo-950 truncate">${escapeHtml(tbl.title)}</p>
+                  <span class="text-[10px] text-indigo-700">${tbl.rows.length} rows × ${tbl.columns.length} cols</span>
+                </div>
+                <button type="button" data-unlink-item="${escapeHtml(sectionKey)}|table|${escapeHtml(tbl.id)}" title="Unlink" class="p-1 text-slate-400 hover:text-rose-600 rounded shrink-0">
+                  <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                </button>
+              </div>
+            `;
+          }
+          return '';
+        }).join('');
+
+        return `
+          <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
+            <div class="flex flex-wrap gap-2">${linkedCards}</div>
+            ${linkOptions ? `
+              <select data-link-target="${escapeHtml(sectionKey)}" class="link-to-section-select text-[11px] font-medium text-teal-700 bg-teal-50/70 hover:bg-teal-100 border border-teal-200 rounded-lg px-2 py-1 focus:outline-none cursor-pointer">
+                <option value="">+ Link Diagram / Table...</option>
+                ${linkOptions}
+              </select>
+            ` : ''}
+          </div>
+        `;
+      };
+
+      const collapsed = note.collapsedSections || {};
+
+      const fieldsHtml = state.schema.fields.map(field => {
+        const val = note.fields?.[field.id] ?? '';
+        const isCol = !!collapsed[field.id];
+        const inputEl = field.type === 'text'
+          ? `<input type="text" data-field-id="${escapeHtml(field.id)}" value="${escapeHtml(val)}" placeholder="${escapeHtml(field.placeholder || '')}" class="note-field-input w-full px-3.5 py-2.5 text-base sm:text-sm bg-slate-50/70 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white transition" />`
+          : `<textarea data-field-id="${escapeHtml(field.id)}" rows="3" placeholder="${escapeHtml(field.placeholder || '')}" class="note-field-input auto-textarea w-full px-3.5 py-2.5 text-base sm:text-sm bg-slate-50/70 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white transition leading-relaxed">${escapeHtml(val)}</textarea>`;
+        return `
+          <div class="space-y-1.5 pb-2 border-b border-slate-100 last:border-b-0">
+            <div class="flex items-center justify-between gap-2">
+              <button type="button" data-toggle-collapse="${escapeHtml(field.id)}" class="flex items-center gap-1.5 text-left py-1 text-xs font-semibold uppercase tracking-wider text-slate-500 hover:text-slate-800 transition">
+                <i data-lucide="${isCol ? 'chevron-right' : 'chevron-down'}" class="w-4 h-4 shrink-0"></i>
+                <span>${escapeHtml(field.label)}</span>
+                ${isCol && val.trim() ? '<span class="ml-1 text-[10px] font-normal normal-case text-slate-400">(hidden)</span>' : ''}
+              </button>
+            </div>
+            ${isCol ? '' : `${inputEl}${renderSectionLinks(field.id)}`}
+          </div>
+        `;
+      }).join('');
+
+      const customSectionsHtml = (note.customSections || []).map(sec => {
+        const isCol = !!collapsed[sec.id];
+        return `
+          <div class="space-y-1.5 p-3.5 rounded-xl bg-amber-50/40 border border-amber-200/80">
+            <div class="flex items-center justify-between gap-2">
+              <button type="button" data-toggle-collapse="${escapeHtml(sec.id)}" class="p-1 text-amber-800 hover:bg-amber-100 rounded">
+                <i data-lucide="${isCol ? 'chevron-right' : 'chevron-down'}" class="w-4 h-4"></i>
+              </button>
+              <input type="text" data-custom-sec-title="${escapeHtml(sec.id)}" value="${escapeHtml(sec.title)}" class="custom-sec-title-input flex-1 text-xs font-bold uppercase tracking-wider text-amber-900 bg-transparent focus:bg-white px-1.5 py-0.5 rounded focus:outline-none" />
+              <button type="button" data-del-custom-sec="${escapeHtml(sec.id)}" title="Remove section" class="p-1 text-slate-400 hover:text-rose-600 rounded">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+            ${isCol ? '' : `
+              <textarea data-custom-sec-content="${escapeHtml(sec.id)}" rows="3" placeholder="Write notes for ${escapeHtml(sec.title)}..." class="custom-sec-content-input auto-textarea w-full px-3 py-2 text-base sm:text-sm bg-white border border-amber-200/80 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 leading-relaxed">${escapeHtml(sec.content || '')}</textarea>
+              ${renderSectionLinks(sec.id)}
+            `}
+          </div>
+        `;
+      }).join('');
+
+      const tablesHtml = (note.tables || []).map((tbl, tIdx) => {
+        const headerCells = tbl.columns.map((col, cIdx) => `
+          <th class="bg-slate-100/90 border-b border-r border-slate-200 p-1.5 min-w-[140px]">
+            <div class="flex items-center gap-1">
+              <input type="text" data-tbl-id="${escapeHtml(tbl.id)}" data-col-idx="${cIdx}" value="${escapeHtml(col)}" class="tbl-col-input w-full bg-transparent px-1.5 py-1 text-xs font-semibold text-slate-800 focus:outline-none focus:bg-white rounded" />
+              ${tbl.columns.length > 1 ? `
+                <button type="button" data-del-col="${escapeHtml(tbl.id)}:${cIdx}" title="Remove column" class="p-1 text-slate-400 hover:text-rose-600 rounded shrink-0">
+                  <i data-lucide="x" class="w-3 h-3"></i>
+                </button>
+              ` : ''}
+            </div>
+          </th>
+        `).join('');
+
+        const bodyRows = tbl.rows.map((row, rIdx) => `
+          <tr class="group hover:bg-slate-50/60">
+            ${tbl.columns.map((_, cIdx) => `
+              <td class="border-b border-r border-slate-200 p-1.5 align-top">
+                <textarea rows="2" data-tbl-id="${escapeHtml(tbl.id)}" data-row-idx="${rIdx}" data-col-idx="${cIdx}" class="tbl-cell-input w-full bg-transparent px-1.5 py-1 text-xs sm:text-sm text-slate-700 focus:outline-none focus:bg-white rounded resize-y leading-snug">${escapeHtml(row[cIdx] ?? '')}</textarea>
+              </td>
+            `).join('')}
+            <td class="border-b border-slate-200 p-1 w-9 text-center align-middle">
+              <button type="button" data-del-row="${escapeHtml(tbl.id)}:${rIdx}" title="Delete row" class="p-1.5 text-slate-400 hover:text-rose-600 rounded transition">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+              </button>
+            </td>
+          </tr>
+        `).join('');
+
+        return `
+          <div class="rounded-xl border border-slate-200 bg-white overflow-hidden shadow-2xs">
+            <div class="px-3.5 py-2.5 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2">
+              <input type="text" data-tbl-title="${escapeHtml(tbl.id)}" value="${escapeHtml(tbl.title)}" class="tbl-title-input flex-1 min-w-[180px] bg-transparent font-semibold text-sm text-slate-900 focus:outline-none focus:bg-white px-2 py-1 rounded-md" placeholder="Classification table title..." />
+              <div class="flex items-center gap-1.5">
+                <button type="button" data-add-row="${escapeHtml(tbl.id)}" class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-teal-700 bg-teal-50 hover:bg-teal-100 rounded-lg transition">
+                  <i data-lucide="plus" class="w-3 h-3"></i> Row
+                </button>
+                <button type="button" data-add-col="${escapeHtml(tbl.id)}" class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-slate-700 bg-white hover:bg-slate-100 border border-slate-200 rounded-lg transition">
+                  <i data-lucide="columns-3" class="w-3 h-3"></i> Column
+                </button>
+                <button type="button" data-del-tbl="${escapeHtml(tbl.id)}" title="Delete table" class="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition">
+                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                </button>
+              </div>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full border-collapse text-left">
+                <thead>
+                  <tr>
+                    ${headerCells}
+                    <th class="bg-slate-100/90 border-b border-slate-200 w-9"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${bodyRows}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      const noteImgOptions = (note.images || []).map(im =>
+        `<option value="${escapeHtml(im.id)}">Attach: ${escapeHtml(im.caption || im.modality || 'Diagram')}</option>`
+      ).join('');
+
+      const flashcardsHtml = (note.flashcards || []).map(fc => {
+        const linkedImg = fc.imageId ? (note.images || []).find(i => i.id === fc.imageId) : null;
+        return `
+          <div class="p-3 rounded-xl border border-slate-200 bg-slate-50/70 space-y-2">
+            <div class="flex items-start justify-between gap-2">
+              <input type="text" data-edit-fc-front="${escapeHtml(fc.id)}" value="${escapeHtml(fc.front)}" class="edit-fc-front flex-1 text-xs font-semibold text-slate-900 bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-teal-500" />
+              <span class="px-2 py-1 rounded text-[10px] font-medium ${isCardDue(fc) ? 'bg-amber-50 text-amber-700' : 'bg-emerald-50 text-emerald-700'} shrink-0">${fc.reps > 0 ? `${fc.intervalDays}d` : 'New'}</span>
+              <button type="button" data-del-fc="${escapeHtml(fc.id)}" title="Delete flashcard" class="p-1.5 text-slate-400 hover:text-rose-600 rounded shrink-0">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+            <textarea rows="2" data-edit-fc-back="${escapeHtml(fc.id)}" class="edit-fc-back w-full text-xs text-slate-700 bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-teal-500 leading-snug">${escapeHtml(fc.back)}</textarea>
+            ${linkedImg ? `
+              <div class="inline-flex items-center gap-2 text-[11px] text-teal-700 bg-teal-50 px-2 py-1 rounded-md border border-teal-200">
+                <img src="${linkedImg.dataUrl}" alt="" class="w-6 h-6 rounded object-cover" />
+                <span>Linked: ${escapeHtml(linkedImg.caption || linkedImg.modality)}</span>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+
+      const imagesHtml = (note.images || []).map(img => `
+        <div class="group rounded-xl border border-slate-200 bg-white overflow-hidden shadow-2xs flex flex-col">
+          <div class="relative aspect-[4/3] bg-slate-100 overflow-hidden cursor-pointer" data-zoom-img="${escapeHtml(img.id)}">
+            <img src="${img.dataUrl}" alt="${escapeHtml(img.caption || 'Clinical image')}" class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-200" />
+            <button type="button" data-del-img="${escapeHtml(img.id)}" title="Remove image" class="absolute top-2 right-2 p-1.5 rounded-lg bg-slate-900/70 text-white hover:bg-rose-600 transition">
+              <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+          <div class="p-2.5 border-t border-slate-100 space-y-1.5">
+            <input type="text" data-img-caption="${escapeHtml(img.id)}" value="${escapeHtml(img.caption || '')}" placeholder="Add finding, laterality (OD/OS)..." class="img-caption-input w-full text-xs font-medium text-slate-800 bg-transparent focus:outline-none focus:bg-slate-50 px-1.5 py-1 rounded" />
+            <select data-img-modality="${escapeHtml(img.id)}" class="img-modality-select w-full text-[11px] text-slate-600 bg-slate-50 border border-slate-200 rounded-md px-2 py-1 focus:outline-none focus:ring-1 focus:ring-teal-500">
+              ${IMAGING_MODALITIES.map(m => `<option value="${escapeHtml(m)}" ${(img.modality || 'Diagram / Schematic') === m ? 'selected' : ''}>${escapeHtml(m)}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+      `).join('');
+
+      container.innerHTML = `
+        <!-- Note Header Card -->
+        <section class="bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-2xs space-y-4">
+          <div class="flex flex-wrap items-start justify-between gap-3">
+            <div class="flex-1 min-w-[220px]">
+              <input id="note-title-input" type="text" value="${escapeHtml(note.title)}" placeholder="Condition Name (e.g., Acute Asthma Exacerbation)" class="w-full text-lg sm:text-2xl font-bold text-slate-900 bg-transparent border-b border-transparent focus:border-teal-500 focus:outline-none pb-1 transition" />
+            </div>
+            <div class="flex items-center gap-1.5 shrink-0">
+              <button id="btn-duplicate-note" type="button" class="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-lg transition" title="Duplicate note">
+                <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                <span class="hidden sm:inline">Duplicate</span>
+              </button>
+              <button id="btn-delete-note" type="button" class="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium text-rose-600 hover:bg-rose-50 rounded-lg transition" title="Delete note">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                <span class="hidden sm:inline">Delete</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+            <div>
+              <label for="note-specialty-select" class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1">Subspecialty</label>
+              <select id="note-specialty-select" class="w-full px-3 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500">
+                ${specialtyOptions}
+              </select>
+            </div>
+            <div>
+              <label for="note-tags-input" class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1">Tags / Revision Labels (comma-separated)</label>
+              <input id="note-tags-input" type="text" value="${escapeHtml((note.tags || []).join(', '))}" placeholder="e.g., Retina, High-Yield, OCT, E11.319" class="w-full px-3 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500" />
+            </div>
+          </div>
+          ${(note.tags && note.tags.length) ? `
+            <div class="flex flex-wrap gap-1.5">
+              ${note.tags.map(t => `<button type="button" data-quick-tag-filter="${escapeHtml(t)}" class="px-2 py-0.5 rounded-full text-[11px] font-medium bg-teal-50 text-teal-700 border border-teal-200 hover:bg-teal-100 transition">#${escapeHtml(t)}</button>`).join('')}
+            </div>
+          ` : ''}
+          <p class="text-[11px] text-slate-400">Last updated: ${escapeHtml(formatDate(note.updatedAt))}</p>
+        </section>
+
+        <!-- Condition Description Fields & Custom Sections -->
+        <section class="bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-2xs space-y-5">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <h2 class="text-sm sm:text-base font-bold text-slate-900 flex items-center gap-2">
+              <i data-lucide="clipboard-list" class="w-4 h-4 text-teal-600"></i>
+              Condition Description &amp; Sections
+            </h2>
+            <div class="flex items-center gap-1.5">
+              <button id="btn-collapse-all-sec" type="button" class="px-2.5 py-1 text-xs font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition">Collapse All</button>
+              <button id="btn-expand-all-sec" type="button" class="px-2.5 py-1 text-xs font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition">Expand All</button>
+              <button id="btn-view-note-network" type="button" class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold text-teal-700 bg-teal-50 hover:bg-teal-100 border border-teal-200 rounded-lg transition">
+                <i data-lucide="share-2" class="w-3.5 h-3.5"></i> <span class="hidden sm:inline">Topic Network</span>
+              </button>
+            </div>
+          </div>
+          <div class="space-y-4">
+            ${fieldsHtml}
+            ${customSectionsHtml}
+          </div>
+          <form id="form-add-custom-section" class="pt-3 border-t border-slate-200 flex flex-col sm:flex-row gap-2">
+            <input id="new-custom-sec-title" type="text" required placeholder="New section title (e.g., Surgical Pearls, OCT Biomarkers, Mnemonic)" class="flex-1 px-3 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500" />
+            <button type="submit" class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-white bg-slate-800 hover:bg-slate-900 rounded-lg transition shrink-0">
+              <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add Note Section
+            </button>
+          </form>
+        </section>
+
+        <!-- Classification Tables -->
+        <section class="bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-2xs space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h2 class="text-sm sm:text-base font-bold text-slate-900 flex items-center gap-2">
+                <i data-lucide="table-2" class="w-4 h-4 text-teal-600"></i>
+                Classification Tables
+              </h2>
+              <p class="text-xs text-slate-500 mt-0.5">Add staging, grading, or scoring tables with custom rows and columns.</p>
+            </div>
+            <button id="btn-add-table" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-teal-600 hover:bg-teal-700 rounded-lg shadow-2xs transition">
+              <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add Table
+            </button>
+          </div>
+
+          <div class="space-y-4">
+            ${tablesHtml || '<p class="text-xs text-slate-400 italic py-2">No classification tables yet. Click "Add Table" to create one.</p>'}
+          </div>
+        </section>
+
+        <!-- Smart Dropzone: Diagrams, Clinical Images & Tables -->
+        <section class="bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-2xs space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h2 class="text-sm sm:text-base font-bold text-slate-900 flex items-center gap-2">
+                <i data-lucide="image" class="w-4 h-4 text-teal-600"></i>
+                Diagrams, Clinical Images &amp; Smart Drop
+              </h2>
+              <p class="text-xs text-slate-500 mt-0.5">Drop diagrams, fundus/OCT images, or CSV/TSV/HTML tables here to auto-incorporate them into this note.</p>
+            </div>
+            <label class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-teal-700 bg-teal-50 hover:bg-teal-100 border border-teal-200 rounded-lg cursor-pointer transition">
+              <i data-lucide="upload" class="w-3.5 h-3.5"></i> Attach Diagram / Table
+              <input id="input-attach-images" type="file" accept="image/*,.csv,.tsv" multiple class="hidden" />
+            </label>
+          </div>
+
+          <div id="image-dropzone" class="border-2 border-dashed border-slate-200 rounded-xl p-5 text-center text-xs text-slate-500 hover:border-teal-400 hover:bg-teal-50/30 transition">
+            Drag &amp; drop <strong>diagrams/images</strong> or <strong>CSV/TSV/spreadsheet tables</strong> here (or paste with Ctrl/Cmd+V).
+          </div>
+
+          ${(note.images && note.images.length) ? `
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pt-1">
+              ${imagesHtml}
+            </div>
+          ` : ''}
+        </section>
+
+        <!-- Note Flashcards Section -->
+        <section class="bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-2xs space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h2 class="text-sm sm:text-base font-bold text-slate-900 flex items-center gap-2">
+                <i data-lucide="layers" class="w-4 h-4 text-teal-600"></i>
+                Note Flashcards (${(note.flashcards || []).length})
+              </h2>
+              <p class="text-xs text-slate-500 mt-0.5">Auto-generate cards from pathophysiology &amp; classification tables, or add custom Q&amp;A cards.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button id="btn-autogen-fc" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-teal-700 bg-teal-50 hover:bg-teal-100 border border-teal-200 rounded-lg transition">
+                <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Auto-Generate Cards
+              </button>
+              <button id="btn-study-note-fc" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-lg transition">
+                <i data-lucide="play" class="w-3.5 h-3.5"></i> Study Deck
+              </button>
+            </div>
+          </div>
+
+          <form id="form-add-fc" class="space-y-2 pt-1">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <input id="fc-front-input" type="text" required placeholder="Front (Question / Condition / Stage)" class="px-3 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500" />
+              <input id="fc-back-input" type="text" required placeholder="Back (Answer / Mechanism / Criteria)" class="px-3 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500" />
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <select id="fc-image-select" class="px-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg text-slate-700 focus:outline-none focus:ring-1 focus:ring-teal-500">
+                <option value="">No diagram attached</option>
+                ${noteImgOptions}
+              </select>
+              <button type="submit" class="ml-auto px-4 py-1.5 text-xs font-semibold text-white bg-teal-600 hover:bg-teal-700 rounded-lg transition">Add Flashcard</button>
+            </div>
+          </form>
+
+          <div class="space-y-2">
+            ${flashcardsHtml || '<p class="text-xs text-slate-400 italic">No flashcards for this note yet. Click "Auto-Generate Cards" to build cards from your note and tables.</p>'}
+          </div>
+        </section>
+      `;
+
+      lucide.createIcons();
+    }
+
+    function renderSchemaModal() {
+      const fieldsList = document.getElementById('schema-fields-list');
+      fieldsList.innerHTML = state.schema.fields.map(f => `
+        <div class="flex items-center justify-between gap-2 px-3 py-2 rounded-lg bg-slate-50 border border-slate-200">
+          <div class="min-w-0">
+            <span class="text-xs sm:text-sm font-medium text-slate-800">${escapeHtml(f.label)}</span>
+            <span class="ml-2 text-[11px] px-1.5 py-0.5 rounded bg-slate-200 text-slate-600">${f.type === 'text' ? 'Short' : 'Long'}</span>
+          </div>
+          ${state.schema.fields.length > 1 ? `
+            <button type="button" data-del-schema-field="${escapeHtml(f.id)}" class="p-1 text-slate-400 hover:text-rose-600 rounded" title="Remove field">
+              <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+            </button>
+          ` : ''}
+        </div>
+      `).join('');
+
+      const specList = document.getElementById('schema-specialties-list');
+      specList.innerHTML = state.schema.specialties.map(s => `
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200">
+          ${escapeHtml(s)}
+          ${state.schema.specialties.length > 1 ? `
+            <button type="button" data-del-schema-spec="${escapeHtml(s)}" class="text-slate-400 hover:text-rose-600">
+              <i data-lucide="x" class="w-3 h-3"></i>
+            </button>
+          ` : ''}
+        </span>
+      `).join('');
+
+      lucide.createIcons();
+    }
+
+    function renderNetworkView() {
+      const container = document.getElementById('network-container');
+      const note = getActiveNote();
+      if (!note) {
+        container.innerHTML = `<div class="bg-white rounded-2xl border border-slate-200 p-10 text-center text-sm text-slate-500">Select a condition note from the sidebar to view its Topic Network.</div>`;
+        return;
+      }
+
+      note.networkLayout = note.networkLayout || {};
+      const nodes = [];
+      for (const f of state.schema.fields) {
+        const val = note.fields?.[f.id];
+        if (val && val.trim()) {
+          nodes.push({ kind: 'field', id: f.id, label: f.label, color: '#0f766e', bg: '#f0fdfa', border: '#99f6e4', content: val });
+        }
+      }
+      for (const sec of (note.customSections || [])) {
+        nodes.push({ kind: 'custom', id: sec.id, label: sec.title, color: '#b45309', bg: '#fffbeb', border: '#fde68a', content: sec.content || '(Empty)' });
+      }
+      for (const tbl of (note.tables || [])) {
+        nodes.push({ kind: 'table', id: tbl.id, label: tbl.title, color: '#4338ca', bg: '#eef2ff', border: '#c7d2fe', table: tbl });
+      }
+      for (const img of (note.images || [])) {
+        nodes.push({ kind: 'image', id: img.id, label: img.caption || img.modality || 'Diagram', color: '#be185d', bg: '#fdf2f8', border: '#fbcfe8', image: img });
+      }
+
+      const cx = note.networkLayout['__center__']?.x ?? 380;
+      const cy = note.networkLayout['__center__']?.y ?? 250;
+      const rx = 255, ry = 165;
+      const total = Math.max(nodes.length, 1);
+
+      nodes.forEach((n, idx) => {
+        const saved = note.networkLayout[n.id];
+        if (saved) {
+          n.x = saved.x;
+          n.y = saved.y;
+        } else {
+          const angle = (idx / total) * Math.PI * 2 - Math.PI / 2;
+          n.x = Math.round(cx + rx * Math.cos(angle));
+          n.y = Math.round(cy + ry * Math.sin(angle));
+        }
+      });
+
+      // Build expanded child nodes (e.g. table rows or section summary snippets)
+      const childNodes = [];
+      const childEdges = [];
+      nodes.forEach(n => {
+        if (!state.expandedNetworkNodes[n.id]) return;
+        const baseAngle = Math.atan2(n.y - cy, n.x - cx);
+        if (n.kind === 'table' && n.table?.rows?.length) {
+          n.table.rows.slice(0, 6).forEach((row, rIdx) => {
+            const spread = (rIdx - (Math.min(n.table.rows.length, 6) - 1) / 2) * 0.42;
+            const cid = `${n.id}__row_${rIdx}`;
+            const savedC = note.networkLayout[cid];
+            const x = savedC ? savedC.x : Math.round(n.x + 135 * Math.cos(baseAngle + spread));
+            const y = savedC ? savedC.y : Math.round(n.y + 115 * Math.sin(baseAngle + spread));
+            const label = row[0] || `Row ${rIdx + 1}`;
+            const detail = n.table.columns.slice(1).map((c, i) => `${c}: ${row[i + 1] || '—'}`).join('\n');
+            childNodes.push({ kind: 'subrow', id: cid, parentId: n.id, label, detail, x, y, color: '#3730a3', bg: '#f5f3ff', border: '#ddd6fe' });
+            childEdges.push({ src: n, dst: { x, y } });
+          });
+        } else if ((n.kind === 'field' || n.kind === 'custom') && n.content) {
+          const sentences = n.content.split(/(?<=[.!?])\s+/).filter(Boolean).slice(0, 3);
+          sentences.forEach((sent, sIdx) => {
+            const spread = (sIdx - (sentences.length - 1) / 2) * 0.5;
+            const cid = `${n.id}__pt_${sIdx}`;
+            const savedC = note.networkLayout[cid];
+            const x = savedC ? savedC.x : Math.round(n.x + 130 * Math.cos(baseAngle + spread));
+            const y = savedC ? savedC.y : Math.round(n.y + 110 * Math.sin(baseAngle + spread));
+            childNodes.push({ kind: 'subpoint', id: cid, parentId: n.id, label: sent.slice(0, 24) + (sent.length > 24 ? '…' : ''), detail: sent, x, y, color: '#115e59', bg: '#f0fdfa', border: '#99f6e4' });
+            childEdges.push({ src: n, dst: { x, y } });
+          });
+        }
+      });
+
+      const allNodes = [...nodes, ...childNodes];
+      const nodeById = new Map(allNodes.map(n => [n.id, n]));
+      const crossEdges = [];
+      if (note.links) {
+        for (const [secId, arr] of Object.entries(note.links)) {
+          const src = nodeById.get(secId);
+          if (!src) continue;
+          for (const item of arr) {
+            const dst = nodeById.get(item.id);
+            if (dst) crossEdges.push({ src, dst });
+          }
+        }
+      }
+
+      const selected = state.selectedNetworkNode
+        ? allNodes.find(n => n.id === state.selectedNetworkNode.id) || null
+        : nodes[0] || null;
+
+      let inspectorHtml = '<p class="text-xs text-slate-500">Click any node to inspect, drag nodes to rearrange, scroll to zoom, or click Expand to reveal sub-topics.</p>';
+      if (selected) {
+        const isExpanded = !!state.expandedNetworkNodes[selected.id];
+        const canExpand = selected.kind === 'table' || selected.kind === 'field' || selected.kind === 'custom';
+        const expandBtn = canExpand
+          ? `<button type="button" data-toggle-expand-node="${escapeHtml(selected.id)}" class="px-2.5 py-1 text-[11px] font-semibold rounded-lg border transition ${isExpanded ? 'bg-slate-900 text-white border-slate-900' : 'bg-teal-50 text-teal-700 border-teal-200 hover:bg-teal-100'}">${isExpanded ? 'Collapse Sub-topics' : 'Expand Sub-topics'}</button>`
+          : '';
+
+        if (selected.kind === 'field' || selected.kind === 'custom') {
+          inspectorHtml = `
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-teal-50 text-teal-700">${escapeHtml(selected.label)}</span>
+              ${expandBtn}
+            </div>
+            <p class="text-sm text-slate-700 whitespace-pre-line leading-relaxed">${escapeHtml(selected.content)}</p>
+          `;
+        } else if (selected.kind === 'subrow' || selected.kind === 'subpoint') {
+          inspectorHtml = `
+            <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-indigo-50 text-indigo-700 mb-2">${escapeHtml(selected.label)}</span>
+            <p class="text-sm text-slate-700 whitespace-pre-line leading-relaxed">${escapeHtml(selected.detail)}</p>
+          `;
+        } else if (selected.kind === 'table') {
+          const t = selected.table;
+          inspectorHtml = `
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-indigo-50 text-indigo-700">Classification Table</span>
+              ${expandBtn}
+            </div>
+            <h4 class="text-sm font-bold text-slate-900 mb-2">${escapeHtml(t.title)}</h4>
+            <div class="overflow-x-auto border border-slate-200 rounded-lg">
+              <table class="w-full text-xs text-left border-collapse">
+                <thead><tr class="bg-slate-100">${t.columns.map(c => `<th class="p-2 border-b border-slate-200 font-semibold">${escapeHtml(c)}</th>`).join('')}</tr></thead>
+                <tbody>${t.rows.map(r => `<tr class="border-b border-slate-100">${r.map(c => `<td class="p-2 align-top">${escapeHtml(c)}</td>`).join('')}</tr>`).join('')}</tbody>
+              </table>
+            </div>
+          `;
+        } else if (selected.kind === 'image') {
+          const im = selected.image;
+          inspectorHtml = `
+            <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-pink-50 text-pink-700 mb-2">${escapeHtml(im.modality || 'Diagram')}</span>
+            <img src="${im.dataUrl}" alt="${escapeHtml(im.caption)}" class="w-full max-h-56 object-contain rounded-xl border border-slate-200 bg-slate-50 mb-2" />
+            <p class="text-xs font-medium text-slate-700">${escapeHtml(im.caption || '')}</p>
+          `;
+        }
+      }
+
+      const nv = state.networkView;
+      container.innerHTML = `
+        <div class="bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 class="text-base sm:text-lg font-bold text-slate-900">Topic Concept Network — ${escapeHtml(note.title)}</h2>
+            <p class="text-xs text-slate-500">Drag nodes to organize • Scroll to zoom • Drag background to pan • Double-click a node to expand sub-topics.</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-1.5">
+            <button id="btn-net-autolink" type="button" class="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-teal-700 bg-teal-50 hover:bg-teal-100 border border-teal-200 rounded-lg transition" title="Automatically link related sections, tables, and diagrams">
+              <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Auto-Link
+            </button>
+            <button id="btn-net-zoom-out" type="button" class="px-2.5 py-1.5 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition" title="Zoom out">-</button>
+            <button id="btn-net-zoom-in" type="button" class="px-2.5 py-1.5 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition" title="Zoom in">+</button>
+            <button id="btn-net-reset" type="button" class="px-2.5 py-1.5 text-xs font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition">Reset</button>
+            <button id="btn-network-to-edit" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-teal-600 hover:bg-teal-700 rounded-lg transition">
+              <i data-lucide="pencil" class="w-3.5 h-3.5"></i> Edit Note
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-5">
+          <div class="lg:col-span-3 bg-white rounded-2xl border border-slate-200 p-2 shadow-2xs overflow-hidden relative">
+            <svg id="network-svg" viewBox="0 0 760 500" class="w-full h-[460px] select-none cursor-grab active:cursor-grabbing touch-none bg-slate-50/40 rounded-xl">
+              <g id="network-viewport" transform="translate(${nv.x}, ${nv.y}) scale(${nv.scale})">
+                <!-- Center-to-block dashed edges -->
+                ${nodes.map(n => `<line x1="${cx}" y1="${cy}" x2="${n.x}" y2="${n.y}" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4 4" />`).join('')}
+                <!-- Expanded child edges -->
+                ${childEdges.map(e => `<line x1="${e.src.x}" y1="${e.src.y}" x2="${e.dst.x}" y2="${e.dst.y}" stroke="#a5b4fc" stroke-width="1.5" />`).join('')}
+                <!-- Explicit linked section <-> diagram/table edges -->
+                ${crossEdges.map(e => `<line x1="${e.src.x}" y1="${e.src.y}" x2="${e.dst.x}" y2="${e.dst.y}" stroke="#0d9488" stroke-width="2.5" opacity="0.8" />`).join('')}
+
+                <!-- Expanded Sub-topic Nodes -->
+                ${childNodes.map(cn => {
+                  const isSel = selected && selected.id === cn.id;
+                  const shortL = cn.label.length > 20 ? cn.label.slice(0, 18) + '…' : cn.label;
+                  return `
+                    <g data-net-node="${escapeHtml(cn.id)}" data-drag-node="${escapeHtml(cn.id)}" class="cursor-move">
+                      <rect x="${cn.x - 62}" y="${cn.y - 15}" width="124" height="30" rx="8" fill="${cn.bg}" stroke="${isSel ? '#0f172a' : cn.border}" stroke-width="${isSel ? '2' : '1.2'}" />
+                      <text x="${cn.x}" y="${cn.y + 3}" text-anchor="middle" font-size="10" font-weight="600" fill="${cn.color}">${escapeHtml(shortL)}</text>
+                    </g>
+                  `;
+                }).join('')}
+
+                <!-- Main Block Nodes -->
+                ${nodes.map(n => {
+                  const isSel = selected && selected.id === n.id;
+                  const isExp = !!state.expandedNetworkNodes[n.id];
+                  const shortLabel = n.label.length > 22 ? n.label.slice(0, 20) + '…' : n.label;
+                  return `
+                    <g data-net-node="${escapeHtml(n.id)}" data-drag-node="${escapeHtml(n.id)}" class="cursor-move">
+                      <rect x="${n.x - 76}" y="${n.y - 21}" width="152" height="42" rx="10" fill="${n.bg}" stroke="${isSel ? '#0f172a' : n.border}" stroke-width="${isSel ? '2.5' : '1.5'}" />
+                      <text x="${n.x}" y="${n.y + 4}" text-anchor="middle" font-size="11" font-weight="600" fill="${n.color}">${escapeHtml(shortLabel)}${isExp ? ' ▾' : ''}</text>
+                    </g>
+                  `;
+                }).join('')}
+
+                <!-- Center Disease Hub -->
+                <g data-drag-node="__center__" class="cursor-move">
+                  <rect x="${cx - 95}" y="${cy - 28}" width="190" height="56" rx="14" fill="#0f766e" stroke="#115e59" stroke-width="2" />
+                  <text x="${cx}" y="${cy - 3}" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">${escapeHtml((note.title || 'Condition').slice(0, 26))}</text>
+                  <text x="${cx}" y="${cy + 14}" text-anchor="middle" font-size="10" fill="#ccfbf1">${escapeHtml(note.specialty || '')}</text>
+                </g>
+              </g>
+            </svg>
+            <div class="flex flex-wrap items-center gap-4 px-3 pt-2 text-[11px] text-slate-500 border-t border-slate-100">
+              <span class="inline-flex items-center gap-1.5"><span class="w-3 h-0.5 bg-teal-600 inline-block"></span> Linked Diagram / Table</span>
+              <span class="inline-flex items-center gap-1.5"><span class="w-3 h-0.5 border-t border-dashed border-slate-400 inline-block"></span> Topic Block</span>
+              <span class="ml-auto">Zoom: ${Math.round(nv.scale * 100)}%</span>
+            </div>
+          </div>
+
+          <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 p-5 shadow-2xs flex flex-col justify-between max-h-[520px] overflow-y-auto">
+            <div>
+              <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Block Revision Inspector</h3>
+              ${inspectorHtml}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderLateralStudyView() {
+      const container = document.getElementById('lateral-container');
+      const isModality = state.lateralMode === 'modality';
+
+      let cardsHtml = '';
+      if (isModality) {
+        const mod = state.lateralModality;
+        const modLower = mod.toLowerCase();
+        const keywords = modLower.includes('oct') ? ['oct', 'rnfl', 'macula', 'gc-ipl']
+          : modLower.includes('slit') ? ['slit', 'anterior chamber', 'cornea', 'iris', 'angle', 'cells', 'flare']
+          : modLower.includes('fundus') ? ['fundus', 'disc', 'retina', 'macula', 'microaneurysm', 'cup']
+          : modLower.includes('visual field') ? ['visual field', 'perimetry', 'hemifield', 'scotoma']
+          : [modLower.split(' ')[0]];
+
+        const matches = state.notes.map(note => {
+          const matchingImages = (note.images || []).filter(i => mod === 'All Imaging' || (i.modality || '') === mod);
+          const relevantTexts = [];
+          for (const f of state.schema.fields) {
+            const val = note.fields?.[f.id] || '';
+            if (val && (mod === 'All Imaging' ? (f.id === 'slitlamp' || f.id === 'fundus') : keywords.some(k => val.toLowerCase().includes(k) || f.label.toLowerCase().includes(k)))) {
+              relevantTexts.push({ label: f.label, text: val });
+            }
+          }
+          return { note, matchingImages, relevantTexts };
+        }).filter(m => m.matchingImages.length > 0 || m.relevantTexts.length > 0);
+
+        cardsHtml = matches.length === 0
+          ? `<div class="bg-white rounded-2xl border border-slate-200 p-8 text-center text-sm text-slate-500">No conditions currently have tagged images or findings for <strong>${escapeHtml(mod)}</strong>. Tag an image with this modality or document it in your notes!</div>`
+          : matches.map(({ note, matchingImages, relevantTexts }) => `
+            <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-2xs space-y-3">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <div>
+                  <h3 class="text-base font-bold text-slate-900">${escapeHtml(note.title)}</h3>
+                  <span class="text-xs font-medium text-teal-700">${escapeHtml(note.specialty)}</span>
+                </div>
+                <button type="button" data-jump-note="${escapeHtml(note.id)}" class="px-3 py-1 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition">Open Note</button>
+              </div>
+              ${relevantTexts.map(rt => `
+                <div class="p-3 rounded-xl bg-slate-50 border border-slate-100">
+                  <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">${escapeHtml(rt.label)}</p>
+                  <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">${escapeHtml(rt.text)}</p>
+                </div>
+              `).join('')}
+              ${matchingImages.length ? `
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-1">
+                  ${matchingImages.map(im => `
+                    <div class="rounded-xl border border-slate-200 overflow-hidden cursor-pointer" data-zoom-img-global="${escapeHtml(note.id)}|${escapeHtml(im.id)}">
+                      <img src="${im.dataUrl}" alt="${escapeHtml(im.caption)}" class="w-full aspect-[4/3] object-cover" />
+                      <p class="p-2 text-[11px] text-slate-700 truncate">${escapeHtml(im.caption || im.modality)}</p>
+                    </div>
+                  `).join('')}
+                </div>
+              ` : ''}
+            </div>
+          `).join('');
+      } else {
+        const dimId = state.lateralDimension;
+        const fieldObj = state.schema.fields.find(f => f.id === dimId) || state.schema.fields[0];
+        cardsHtml = state.notes.map(note => {
+          const val = note.fields?.[fieldObj.id] || '';
+          return `
+            <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-2xs space-y-2">
+              <div class="flex items-center justify-between gap-2">
+                <div>
+                  <h3 class="text-sm sm:text-base font-bold text-slate-900">${escapeHtml(note.title)}</h3>
+                  <span class="text-xs text-teal-700 font-medium">${escapeHtml(note.specialty)}</span>
+                </div>
+                <button type="button" data-jump-note="${escapeHtml(note.id)}" class="px-3 py-1 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition">Open Note</button>
+              </div>
+              <p class="text-xs sm:text-sm text-slate-700 whitespace-pre-line leading-relaxed">${val ? escapeHtml(val) : '<span class="italic text-slate-400">Not documented yet</span>'}</p>
+            </div>
+          `;
+        }).join('');
+      }
+
+      container.innerHTML = `
+        <div class="bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h2 class="text-base sm:text-lg font-bold text-slate-900">Lateral Revision — Cross-Disease Comparison</h2>
+              <p class="text-xs text-slate-500">Study an imaging modality or clinical dimension across all conditions at once.</p>
+            </div>
+            <div class="inline-flex rounded-lg bg-slate-100 p-0.5 border border-slate-200">
+              <button type="button" data-lat-mode="modality" class="px-3 py-1 text-xs font-semibold rounded-md transition ${isModality ? 'bg-white text-slate-900 shadow-2xs' : 'text-slate-600'}">By Imaging / Modality</button>
+              <button type="button" data-lat-mode="dimension" class="px-3 py-1 text-xs font-semibold rounded-md transition ${!isModality ? 'bg-white text-slate-900 shadow-2xs' : 'text-slate-600'}">By Clinical Section</button>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap gap-1.5">
+            ${isModality
+              ? ['All Imaging', ...IMAGING_MODALITIES].map(m => `<button type="button" data-lat-mod="${escapeHtml(m)}" class="px-2.5 py-1 rounded-full text-xs font-medium transition ${state.lateralModality === m ? 'bg-teal-600 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}">${escapeHtml(m)}</button>`).join('')
+              : state.schema.fields.map(f => `<button type="button" data-lat-dim="${escapeHtml(f.id)}" class="px-2.5 py-1 rounded-full text-xs font-medium transition ${state.lateralDimension === f.id ? 'bg-teal-600 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}">${escapeHtml(f.label)}</button>`).join('')
+            }
+          </div>
+        </div>
+
+        <div class="space-y-4">${cardsHtml}</div>
+      `;
+    }
+
+    function renderFlashcardsDeck() {
+      const container = document.getElementById('flashcards-container');
+      const allCards = getAllFlashcards();
+      const dueCount = allCards.filter(isCardDue).length;
+      const masteredCount = allCards.filter(c => (c.intervalDays || 0) >= 7).length;
+      document.getElementById('due-badge').textContent = String(dueCount);
+      const mobBadge = document.getElementById('mobile-due-badge');
+      if (mobBadge) mobBadge.textContent = String(dueCount);
+
+      const queue = getStudyQueue();
+      if (state.studyIndex >= queue.length) state.studyIndex = 0;
+      const card = queue[state.studyIndex] || null;
+
+      let linkedImgUrl = null;
+      if (card && card.imageId) {
+        const parentNote = state.notes.find(n => n.id === card.noteId);
+        const imgObj = parentNote?.images?.find(i => i.id === card.imageId);
+        if (imgObj) linkedImgUrl = imgObj.dataUrl;
+      }
+
+      const specPills = ['All', ...state.schema.specialties].map(sp =>
+        `<option value="${escapeHtml(sp)}" ${state.studySpecialty === sp ? 'selected' : ''}>${escapeHtml(sp)}</option>`
+      ).join('');
+
+      const progressPct = queue.length > 0 ? Math.round(((state.studyIndex + 1) / queue.length) * 100) : 0;
+
+      const manageHtml = queue.length === 0
+        ? `<div class="bg-white rounded-2xl border border-slate-200 p-8 text-center text-sm text-slate-500">No flashcards match your current filter.</div>`
+        : `<div class="bg-white rounded-2xl border border-slate-200 divide-y divide-slate-100 overflow-hidden">
+            ${queue.map(c => `
+              <div class="p-4 flex flex-wrap items-start justify-between gap-3 hover:bg-slate-50/60">
+                <div class="min-w-0 flex-1 space-y-1">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 text-slate-600">${escapeHtml(c.specialty || 'Ophthalmology')}</span>
+                    <span class="text-[11px] text-slate-400">${escapeHtml(c.noteTitle || '')}</span>
+                    <span class="text-[10px] font-semibold px-1.5 py-0.5 rounded ${isCardDue(c) ? 'bg-amber-50 text-amber-700' : 'bg-emerald-50 text-emerald-700'}">${c.reps > 0 ? `Interval: ${c.intervalDays}d` : 'New'}</span>
+                  </div>
+                  <p class="text-xs sm:text-sm font-semibold text-slate-900">${escapeHtml(c.front)}</p>
+                  <p class="text-xs text-slate-600 whitespace-pre-line">${escapeHtml(c.back)}</p>
+                </div>
+                <div class="flex items-center gap-1.5 shrink-0">
+                  <button type="button" data-reset-fc="${escapeHtml(c.noteId)}|${escapeHtml(c.id)}" class="px-2 py-1 text-[11px] font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-md transition" title="Reset spaced repetition">Reset</button>
+                  <button type="button" data-jump-note="${escapeHtml(c.noteId)}" class="px-2 py-1 text-[11px] font-medium text-teal-700 bg-teal-50 hover:bg-teal-100 rounded-md transition">Note</button>
+                </div>
+              </div>
+            `).join('')}
+          </div>`;
+
+      container.innerHTML = `
+        <div class="bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h2 class="text-base sm:text-lg font-bold text-slate-900">Ophthalmology Flashcard Deck</h2>
+              <p class="text-xs text-slate-500">${dueCount} due • ${allCards.length} total • ${masteredCount} mastered (≥7d) • ${state.studyReviewedCount} reviewed</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <button id="btn-autogen-all-fc" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-teal-700 bg-teal-50 hover:bg-teal-100 border border-teal-200 rounded-lg transition">
+                <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Sync All Notes to Cards
+              </button>
+              <div class="inline-flex rounded-lg bg-slate-100 p-0.5 border border-slate-200">
+                <button type="button" data-fc-subtab="study" class="px-2.5 py-1 text-xs font-semibold rounded-md transition ${state.studySubTab === 'study' ? 'bg-white text-slate-900 shadow-2xs' : 'text-slate-600'}">Study</button>
+                <button type="button" data-fc-subtab="manage" class="px-2.5 py-1 text-xs font-semibold rounded-md transition ${state.studySubTab === 'manage' ? 'bg-white text-slate-900 shadow-2xs' : 'text-slate-600'}">Browse (${queue.length})</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2">
+            <button type="button" data-fc-filter="all" class="px-3 py-1.5 text-xs font-medium rounded-lg transition ${state.studyFilter === 'all' ? 'bg-teal-600 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}">All (${allCards.length})</button>
+            <button type="button" data-fc-filter="due" class="px-3 py-1.5 text-xs font-medium rounded-lg transition ${state.studyFilter === 'due' ? 'bg-teal-600 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}">Due (${dueCount})</button>
+            <button type="button" data-fc-filter="current" class="px-3 py-1.5 text-xs font-medium rounded-lg transition ${state.studyFilter === 'current' ? 'bg-teal-600 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}">Current Note</button>
+            <select id="fc-specialty-filter" class="px-2.5 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg text-slate-700 focus:outline-none">
+              ${specPills}
+            </select>
+            <input id="fc-search-input" type="text" value="${escapeHtml(state.studySearch)}" placeholder="Search cards..." class="flex-1 min-w-[140px] px-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-teal-500" />
+          </div>
+        </div>
+
+        ${state.studySubTab === 'manage' ? manageHtml : (!card ? `
+          <div class="bg-white rounded-2xl border border-slate-200 p-10 text-center space-y-3">
+            <div class="w-12 h-12 rounded-2xl bg-teal-50 text-teal-600 mx-auto flex items-center justify-center">
+              <i data-lucide="check-circle-2" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-base font-bold text-slate-900">${allCards.length === 0 ? 'No Flashcards Yet' : 'No Matching Cards Due'}</h3>
+            <p class="text-xs sm:text-sm text-slate-500 max-w-md mx-auto">Click <strong>Sync All Notes to Cards</strong> above or switch to <strong>All</strong> to review every card.</p>
+            <button id="btn-back-to-notes" type="button" class="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-white bg-teal-600 hover:bg-teal-700 rounded-lg transition">Back to Notes</button>
+          </div>
+        ` : `
+          <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="w-full h-1 bg-slate-100">
+              <div class="h-full bg-teal-600 transition-all duration-300" style="width: ${progressPct}%"></div>
+            </div>
+            <div class="px-5 py-3 bg-slate-50 border-b border-slate-200 flex items-center justify-between text-xs text-slate-500">
+              <span>${escapeHtml(card.specialty || 'Ophthalmology')} • ${escapeHtml(card.noteTitle || '')}</span>
+              <div class="flex items-center gap-2">
+                <button type="button" data-nav-fc="-1" class="px-2 py-0.5 rounded bg-white border border-slate-200 hover:bg-slate-100 text-slate-700">←</button>
+                <span>${state.studyIndex + 1} / ${queue.length}</span>
+                <button type="button" data-nav-fc="1" class="px-2 py-0.5 rounded bg-white border border-slate-200 hover:bg-slate-100 text-slate-700">→</button>
+              </div>
+            </div>
+            <div id="flashcard-surface" class="p-6 sm:p-10 min-h-[270px] flex flex-col items-center justify-center text-center cursor-pointer select-none hover:bg-slate-50/40 transition">
+              ${!state.studyFlipped ? `
+                <span class="text-[11px] font-semibold uppercase tracking-wider text-teal-600 mb-3">Question / Prompt</span>
+                <p class="text-base sm:text-xl font-bold text-slate-900 max-w-xl">${escapeHtml(card.front)}</p>
+                ${linkedImgUrl ? `<img src="${linkedImgUrl}" alt="Card diagram" class="mt-4 max-h-48 rounded-xl border border-slate-200 object-contain" />` : ''}
+                <p class="text-xs text-slate-400 mt-6">Click card or press <kbd class="px-1.5 py-0.5 bg-slate-100 border border-slate-200 rounded text-[10px]">Space</kbd> to flip</p>
+              ` : `
+                <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-2">Answer</span>
+                <p class="text-sm sm:text-base text-slate-800 whitespace-pre-line max-w-xl leading-relaxed">${escapeHtml(card.back)}</p>
+              `}
+            </div>
+            <div class="px-5 py-4 bg-slate-50 border-t border-slate-200 flex flex-wrap items-center justify-center gap-2">
+              ${!state.studyFlipped ? `
+                <button id="btn-flip-card" type="button" class="px-6 py-2 text-xs sm:text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 rounded-xl transition">Show Answer (Space)</button>
+              ` : `
+                <button type="button" data-rate-fc="1" class="px-4 py-2 text-xs font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 rounded-xl transition">1 · Again (10m)</button>
+                <button type="button" data-rate-fc="2" class="px-4 py-2 text-xs font-semibold text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200 rounded-xl transition">2 · Hard</button>
+                <button type="button" data-rate-fc="3" class="px-4 py-2 text-xs font-semibold text-teal-700 bg-teal-50 hover:bg-teal-100 border border-teal-200 rounded-xl transition">3 · Good</button>
+                <button type="button" data-rate-fc="4" class="px-4 py-2 text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-xl transition">4 · Easy</button>
+              `}
+            </div>
+          </div>
+        `)}
+      `;
+    }
+
+    function renderAll() {
+      const views = {
+        notes: document.getElementById('editor-container'),
+        network: document.getElementById('network-container'),
+        lateral: document.getElementById('lateral-container'),
+        flashcards: document.getElementById('flashcards-container')
+      };
+      const btns = {
+        notes: document.getElementById('btn-mode-notes'),
+        network: document.getElementById('btn-mode-network'),
+        lateral: document.getElementById('btn-mode-lateral'),
+        flashcards: document.getElementById('btn-mode-flashcards')
+      };
+
+      for (const [k, el] of Object.entries(views)) {
+        if (k === state.viewMode) el.classList.remove('hidden');
+        else el.classList.add('hidden');
+      }
+      for (const [k, btn] of Object.entries(btns)) {
+        if (!btn) continue;
+        if (k === state.viewMode) {
+          btn.classList.add('bg-slate-100', 'text-slate-900', 'font-semibold');
+          btn.classList.remove('text-slate-600', 'font-medium');
+        } else {
+          btn.classList.remove('bg-slate-100', 'text-slate-900', 'font-semibold');
+          btn.classList.add('text-slate-600', 'font-medium');
+        }
+      }
+      document.querySelectorAll('[data-mobile-mode]').forEach(btn => {
+        const m = btn.getAttribute('data-mobile-mode');
+        if (m === state.viewMode) {
+          btn.classList.add('text-teal-600', 'font-semibold');
+          btn.classList.remove('text-slate-500', 'font-medium');
+        } else {
+          btn.classList.remove('text-teal-600', 'font-semibold');
+          btn.classList.add('text-slate-500', 'font-medium');
+        }
+      });
+
+      renderSidebar();
+      renderEditor();
+      renderNetworkView();
+      renderLateralStudyView();
+      renderFlashcardsDeck();
+      lucide.createIcons();
+    }
+
+    /* =========================================================================
+       6. MUTATIONS & EVENT HANDLERS
+       ========================================================================= */
+    function createNewNote() {
+      const newNote = {
+        id: uid('note'),
+        title: 'Untitled Ocular Condition',
+        specialty: state.schema.specialties[0] || 'Retina & Vitreous',
+        tags: [],
+        updatedAt: new Date().toISOString(),
+        fields: {},
+        tables: [
+          {
+            id: uid('tbl'),
+            title: 'Classification Table',
+            columns: ['Stage / Class', 'Criteria', 'Notes'],
+            rows: [
+              ['Stage I', '', ''],
+              ['Stage II', '', '']
+            ]
+          }
+        ],
+        images: []
+      };
+      state.notes.unshift(newNote);
+      state.activeNoteId = newNote.id;
+      persistState();
+      renderAll();
+      closeMobileSidebar();
+      showToast('Created new condition note');
+    }
+
+    function processImageFiles(files) {
+      const note = getActiveNote();
+      if (!note || !files || !files.length) return;
+      const imageFiles = Array.from(files).filter(f => f.type.startsWith('image/'));
+      if (!imageFiles.length) {
+        showToast('Please select valid image files');
+        return;
+      }
+      let processed = 0;
+      const compressToDataUrl = (dataUrl, mime) => new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => {
+          const maxDim = 1400;
+          let { width, height } = img;
+          if (width > maxDim || height > maxDim) {
+            const ratio = Math.min(maxDim / width, maxDim / height);
+            width = Math.round(width * ratio);
+            height = Math.round(height * ratio);
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          const outMime = mime === 'image/png' ? 'image/webp' : 'image/jpeg';
+          resolve(canvas.toDataURL(outMime, 0.82));
+        };
+        img.onerror = () => resolve(dataUrl);
+        img.src = dataUrl;
+      });
+
+      imageFiles.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = async (ev) => {
+          const optimizedUrl = await compressToDataUrl(ev.target.result, file.type);
+          note.images = note.images || [];
+          note.images.push({
+            id: uid('img'),
+            caption: file.name.replace(/\.[^.]+$/, ''),
+            modality: 'Diagram / Schematic',
+            dataUrl: optimizedUrl
+          });
+          note.updatedAt = new Date().toISOString();
+          processed++;
+          if (processed === imageFiles.length) {
+            await persistState();
+            renderAll();
+            showToast(`Attached ${processed} optimized image${processed > 1 ? 's' : ''}`);
+          }
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    let desktopSidebarCollapsed = false;
+
+    function openMobileSidebar() {
+      const sb = document.getElementById('sidebar');
+      if (window.innerWidth >= 1024) {
+        desktopSidebarCollapsed = !desktopSidebarCollapsed;
+        if (desktopSidebarCollapsed) {
+          sb.classList.add('lg:hidden');
+        } else {
+          sb.classList.remove('lg:hidden');
+        }
+      } else {
+        sb.classList.remove('-translate-x-full');
+        document.getElementById('sidebar-backdrop').classList.remove('hidden');
+      }
+    }
+
+    function closeMobileSidebar() {
+      if (window.innerWidth < 1024) {
+        document.getElementById('sidebar').classList.add('-translate-x-full');
+        document.getElementById('sidebar-backdrop').classList.add('hidden');
+      }
+    }
+
+    function openSchemaModal() {
+      renderSchemaModal();
+      const m = document.getElementById('modal-schema');
+      m.classList.remove('hidden');
+      m.classList.add('flex');
+    }
+
+    function closeSchemaModal() {
+      const m = document.getElementById('modal-schema');
+      m.classList.add('hidden');
+      m.classList.remove('flex');
+    }
+
+    function openSyncModal() {
+      loadSyncCreds();
+      checkAutoBackupDue();
+      const m = document.getElementById('modal-sync');
+      m.classList.remove('hidden');
+      m.classList.add('flex');
+    }
+
+    function closeSyncModal() {
+      const m = document.getElementById('modal-sync');
+      m.classList.add('hidden');
+      m.classList.remove('flex');
+    }
+
+    function bindEvents() {
+      // Header & Mode controls
+      // Collapsible Right Tools Sidebar (desktop collapse + mobile drawer)
+      let desktopRightCollapsed = false;
+      const rightSidebar = document.getElementById('right-sidebar');
+      const rightBackdrop = document.getElementById('right-sidebar-backdrop');
+      const toggleRightSidebar = () => {
+        if (window.innerWidth >= 1024) {
+          desktopRightCollapsed = !desktopRightCollapsed;
+          if (desktopRightCollapsed) rightSidebar.classList.add('lg:hidden');
+          else rightSidebar.classList.remove('lg:hidden');
+        } else {
+          const isOpen = !rightSidebar.classList.contains('translate-x-full');
+          if (isOpen) {
+            rightSidebar.classList.add('translate-x-full');
+            rightBackdrop.classList.add('hidden');
+          } else {
+            rightSidebar.classList.remove('translate-x-full');
+            rightBackdrop.classList.remove('hidden');
+          }
+        }
+      };
+      const closeMobileRightSidebar = () => {
+        if (window.innerWidth < 1024) {
+          rightSidebar.classList.add('translate-x-full');
+          rightBackdrop.classList.add('hidden');
+        }
+      };
+      document.getElementById('btn-toggle-right-sidebar').addEventListener('click', toggleRightSidebar);
+      document.getElementById('btn-close-right-sidebar').addEventListener('click', closeMobileRightSidebar);
+      rightBackdrop.addEventListener('click', closeMobileRightSidebar);
+
+      document.getElementById('mobile-bottom-nav').addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-mobile-mode]');
+        if (!btn) return;
+        state.viewMode = btn.getAttribute('data-mobile-mode');
+        state.studyFlipped = false;
+        renderAll();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+      document.getElementById('btn-mode-notes').addEventListener('click', () => {
+        state.viewMode = 'notes';
+        renderAll();
+      });
+      document.getElementById('btn-mode-network').addEventListener('click', () => {
+        state.viewMode = 'network';
+        state.selectedNetworkNode = null;
+        renderAll();
+      });
+      document.getElementById('btn-mode-lateral').addEventListener('click', () => {
+        state.viewMode = 'lateral';
+        renderAll();
+      });
+      document.getElementById('btn-mode-flashcards').addEventListener('click', () => {
+        state.viewMode = 'flashcards';
+        state.studyFlipped = false;
+        renderAll();
+      });
+      document.getElementById('btn-toggle-dark').addEventListener('click', () => {
+        const isDark = document.documentElement.classList.toggle('dark');
+        try { localStorage.setItem(THEME_STORAGE_KEY, isDark ? 'dark' : 'light'); } catch {}
+        const icon = document.getElementById('icon-dark-mode');
+        if (icon) icon.setAttribute('data-lucide', isDark ? 'sun' : 'moon');
+        lucide.createIcons();
+      });
+      document.getElementById('btn-toggle-sidebar').addEventListener('click', openMobileSidebar);
+      document.getElementById('btn-close-sidebar').addEventListener('click', closeMobileSidebar);
+      document.getElementById('sidebar-backdrop').addEventListener('click', closeMobileSidebar);
+      document.getElementById('btn-new-note-top').addEventListener('click', createNewNote);
+
+      document.getElementById('search-input').addEventListener('input', (e) => {
+        state.searchQuery = e.target.value;
+        renderSidebar();
+        lucide.createIcons();
+      });
+
+      document.getElementById('tag-filter-select').addEventListener('change', (e) => {
+        state.activeTag = e.target.value;
+        renderSidebar();
+        lucide.createIcons();
+      });
+      document.getElementById('sort-notes-select').addEventListener('change', (e) => {
+        state.sortBy = e.target.value;
+        renderSidebar();
+        lucide.createIcons();
+      });
+      document.getElementById('specialty-filters').addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-filter-spec]');
+        if (!btn) return;
+        state.activeSpecialty = btn.getAttribute('data-filter-spec');
+        renderSidebar();
+        lucide.createIcons();
+      });
+
+      document.getElementById('notes-list').addEventListener('click', (e) => {
+        if (e.target.closest('#btn-empty-new-note')) {
+          createNewNote();
+          return;
+        }
+        const btn = e.target.closest('[data-select-note]');
+        if (!btn) return;
+        state.activeNoteId = btn.getAttribute('data-select-note');
+        renderAll();
+        closeMobileSidebar();
+      });
+
+      // Editor Delegated Events
+      const editor = document.getElementById('editor-container');
+      editor.addEventListener('click', (e) => {
+        const qTag = e.target.closest('[data-quick-tag-filter]');
+        if (qTag) {
+          state.activeTag = qTag.getAttribute('data-quick-tag-filter');
+          renderSidebar();
+          lucide.createIcons();
+          showToast(`Filtered by #${state.activeTag}`);
+        }
+      });
+
+      editor.addEventListener('input', (e) => {
+        const note = getActiveNote();
+        if (!note) return;
+
+        if (e.target.id === 'note-title-input') {
+          note.title = e.target.value;
+          note.updatedAt = new Date().toISOString();
+          persistState();
+          renderSidebar();
+          return;
+        }
+        if (e.target.id === 'note-tags-input') {
+          note.tags = e.target.value.split(',').map(t => t.trim()).filter(Boolean);
+          note.updatedAt = new Date().toISOString();
+          persistState();
+          renderSidebar();
+          return;
+        }
+        if (e.target.classList.contains('note-field-input')) {
+          const fid = e.target.getAttribute('data-field-id');
+          note.fields = note.fields || {};
+          note.fields[fid] = e.target.value;
+          note.updatedAt = new Date().toISOString();
+          persistState();
+          return;
+        }
+        if (e.target.classList.contains('tbl-title-input')) {
+          const tid = e.target.getAttribute('data-tbl-title');
+          const tbl = (note.tables || []).find(t => t.id === tid);
+          if (tbl) {
+            tbl.title = e.target.value;
+            note.updatedAt = new Date().toISOString();
+            persistState();
+          }
+          return;
+        }
+        if (e.target.classList.contains('tbl-col-input')) {
+          const tid = e.target.getAttribute('data-tbl-id');
+          const cIdx = Number(e.target.getAttribute('data-col-idx'));
+          const tbl = (note.tables || []).find(t => t.id === tid);
+          if (tbl) {
+            tbl.columns[cIdx] = e.target.value;
+            note.updatedAt = new Date().toISOString();
+            persistState();
+          }
+          return;
+        }
+        if (e.target.classList.contains('tbl-cell-input')) {
+          const tid = e.target.getAttribute('data-tbl-id');
+          const rIdx = Number(e.target.getAttribute('data-row-idx'));
+          const cIdx = Number(e.target.getAttribute('data-col-idx'));
+          const tbl = (note.tables || []).find(t => t.id === tid);
+          if (tbl && tbl.rows[rIdx]) {
+            tbl.rows[rIdx][cIdx] = e.target.value;
+            note.updatedAt = new Date().toISOString();
+            persistState();
+          }
+          return;
+        }
+        if (e.target.classList.contains('img-caption-input')) {
+          const imgId = e.target.getAttribute('data-img-caption');
+          const img = (note.images || []).find(i => i.id === imgId);
+          if (img) {
+            img.caption = e.target.value;
+            note.updatedAt = new Date().toISOString();
+            persistState();
+          }
+          return;
+        }
+        if (e.target.classList.contains('custom-sec-title-input')) {
+          const sid = e.target.getAttribute('data-custom-sec-title');
+          const sec = (note.customSections || []).find(s => s.id === sid);
+          if (sec) {
+            sec.title = e.target.value;
+            note.updatedAt = new Date().toISOString();
+            persistState();
+          }
+          return;
+        }
+        if (e.target.classList.contains('edit-fc-front')) {
+          const fcId = e.target.getAttribute('data-edit-fc-front');
+          const fc = (note.flashcards || []).find(c => c.id === fcId);
+          if (fc) { fc.front = e.target.value; note.updatedAt = new Date().toISOString(); persistState(); }
+          return;
+        }
+        if (e.target.classList.contains('edit-fc-back')) {
+          const fcId = e.target.getAttribute('data-edit-fc-back');
+          const fc = (note.flashcards || []).find(c => c.id === fcId);
+          if (fc) { fc.back = e.target.value; note.updatedAt = new Date().toISOString(); persistState(); }
+          return;
+        }
+        if (e.target.classList.contains('custom-sec-content-input')) {
+          const sid = e.target.getAttribute('data-custom-sec-content');
+          const sec = (note.customSections || []).find(s => s.id === sid);
+          if (sec) {
+            sec.content = e.target.value;
+            note.updatedAt = new Date().toISOString();
+            persistState();
+          }
+        }
+      });
+
+      editor.addEventListener('change', (e) => {
+        const note = getActiveNote();
+        if (!note) return;
+        if (e.target.id === 'note-specialty-select') {
+          note.specialty = e.target.value;
+          note.updatedAt = new Date().toISOString();
+          persistState();
+          renderSidebar();
+          return;
+        }
+        if (e.target.classList.contains('img-modality-select')) {
+          const imgId = e.target.getAttribute('data-img-modality');
+          const img = (note.images || []).find(i => i.id === imgId);
+          if (img) {
+            img.modality = e.target.value;
+            note.updatedAt = new Date().toISOString();
+            persistState();
+          }
+          return;
+        }
+        if (e.target.classList.contains('link-to-section-select')) {
+          const val = e.target.value;
+          if (!val) return;
+          const sectionKey = e.target.getAttribute('data-link-target');
+          const [type, id] = val.split(':');
+          note.links = note.links || {};
+          note.links[sectionKey] = note.links[sectionKey] || [];
+          if (!note.links[sectionKey].some(l => l.type === type && l.id === id)) {
+            note.links[sectionKey].push({ type, id });
+          }
+          note.updatedAt = new Date().toISOString();
+          persistState();
+          renderAll();
+          showToast('Linked to section');
+          return;
+        }
+        if (e.target.id === 'input-attach-images') {
+          const files = Array.from(e.target.files || []);
+          const imgs = files.filter(f => f.type.startsWith('image/'));
+          const tbls = files.filter(f => f.name.endsWith('.csv') || f.name.endsWith('.tsv'));
+          if (imgs.length) processImageFiles(imgs);
+          tbls.forEach(file => {
+            const reader = new FileReader();
+            reader.onload = async (ev) => {
+              const parsed = parseDelimitedTable(String(ev.target.result || ''), file.name.endsWith('.tsv') ? '\t' : ',');
+              if (parsed && incorporateTableIntoNote(note, parsed, file.name.replace(/\.[^.]+$/, ''))) {
+                await persistState();
+                renderAll();
+                showToast(`Imported table "${file.name}"`);
+              }
+            };
+            reader.readAsText(file);
+          });
+          e.target.value = '';
+        }
+      });
+
+      editor.addEventListener('click', (e) => {
+        if (e.target.closest('#btn-create-first-note')) {
+          createNewNote();
+          return;
+        }
+        const note = getActiveNote();
+        if (!note) return;
+
+        if (e.target.closest('#btn-duplicate-note')) {
+          const copy = structuredClone(note);
+          copy.id = uid('note');
+          copy.title = `${note.title} (Copy)`;
+          copy.updatedAt = new Date().toISOString();
+          state.notes.unshift(copy);
+          state.activeNoteId = copy.id;
+          persistState();
+          renderAll();
+          showToast('Note duplicated');
+          return;
+        }
+
+        if (e.target.closest('#btn-delete-note')) {
+          openConfirm('Delete Condition Note', `Delete "${note.title || 'Untitled'}" and all its tables and images?`, 'Delete Note', async () => {
+            state.notes = state.notes.filter(n => n.id !== note.id);
+            state.activeNoteId = state.notes[0]?.id || null;
+            await persistState();
+            renderAll();
+            showToast('Note deleted');
+          });
+          return;
+        }
+
+        if (e.target.closest('#btn-add-table')) {
+          note.tables = note.tables || [];
+          note.tables.push({
+            id: uid('tbl'),
+            title: 'New Classification Table',
+            columns: ['Class / Grade', 'Criteria', 'Management'],
+            rows: [
+              ['Grade I', '', ''],
+              ['Grade II', '', '']
+            ]
+          });
+          note.updatedAt = new Date().toISOString();
+          persistState();
+          renderEditor();
+          renderSidebar();
+          return;
+        }
+
+        const addRowBtn = e.target.closest('[data-add-row]');
+        if (addRowBtn) {
+          const tid = addRowBtn.getAttribute('data-add-row');
+          const tbl = (note.tables || []).find(t => t.id === tid);
+          if (tbl) {
+            tbl.rows.push(tbl.columns.map(() => ''));
+            note.updatedAt = new Date().toISOString();
+            persistState();
+            renderEditor();
+          }
+          return;
+        }
+
+        const addColBtn = e.target.closest('[data-add-col]');
+        if (addColBtn) {
+          const tid = addColBtn.getAttribute('data-add-col');
+          const tbl = (note.tables || []).find(t => t.id === tid);
+          if (tbl) {
+            tbl.columns.push(`Column ${tbl.columns.length + 1}`);
+            tbl.rows.forEach(r => r.push(''));
+            note.updatedAt = new Date().toISOString();
+            persistState();
+            renderEditor();
+          }
+          return;
+        }
+
+        const delRowBtn = e.target.closest('[data-del-row]');
+        if (delRowBtn) {
+          const [tid, rIdxStr] = delRowBtn.getAttribute('data-del-row').split(':');
+          const tbl = (note.tables || []).find(t => t.id === tid);
+          if (tbl) {
+            tbl.rows.splice(Number(rIdxStr), 1);
+            note.updatedAt = new Date().toISOString();
+            persistState();
+            renderEditor();
+          }
+          return;
+        }
+
+        const delColBtn = e.target.closest('[data-del-col]');
+        if (delColBtn) {
+          const [tid, cIdxStr] = delColBtn.getAttribute('data-del-col').split(':');
+          const cIdx = Number(cIdxStr);
+          const tbl = (note.tables || []).find(t => t.id === tid);
+          if (tbl && tbl.columns.length > 1) {
+            tbl.columns.splice(cIdx, 1);
+            tbl.rows.forEach(r => r.splice(cIdx, 1));
+            note.updatedAt = new Date().toISOString();
+            persistState();
+            renderEditor();
+          }
+          return;
+        }
+
+        const delTblBtn = e.target.closest('[data-del-tbl]');
+        if (delTblBtn) {
+          const tid = delTblBtn.getAttribute('data-del-tbl');
+          const tbl = (note.tables || []).find(t => t.id === tid);
+          openConfirm('Delete Table', `Remove "${tbl?.title || 'this classification table'}"?`, 'Delete Table', async () => {
+            note.tables = (note.tables || []).filter(t => t.id !== tid);
+            note.updatedAt = new Date().toISOString();
+            await persistState();
+            renderEditor();
+            renderSidebar();
+            showToast('Table removed');
+          });
+          return;
+        }
+
+        const delImgBtn = e.target.closest('[data-del-img]');
+        if (delImgBtn) {
+          e.stopPropagation();
+          const imgId = delImgBtn.getAttribute('data-del-img');
+          note.images = (note.images || []).filter(i => i.id !== imgId);
+          note.updatedAt = new Date().toISOString();
+          persistState();
+          renderEditor();
+          renderSidebar();
+          showToast('Image removed');
+          return;
+        }
+
+        const zoomBox = e.target.closest('[data-zoom-img]');
+        if (zoomBox) {
+          const imgId = zoomBox.getAttribute('data-zoom-img');
+          const img = (note.images || []).find(i => i.id === imgId);
+          if (img) {
+            document.getElementById('lightbox-img').src = img.dataUrl;
+            document.getElementById('lightbox-caption').textContent = img.caption || '';
+            const lb = document.getElementById('modal-lightbox');
+            lb.classList.remove('hidden');
+            lb.classList.add('flex');
+          }
+        }
+      });
+
+      // Smart Drag-and-Drop anywhere on the note editor (Diagrams, Images & Tables) + Paste support
+      editor.addEventListener('dragover', (e) => {
+        if (!getActiveNote()) return;
+        e.preventDefault();
+        const dz = document.getElementById('image-dropzone');
+        if (dz) dz.classList.add('border-teal-500', 'bg-teal-50/60');
+      });
+      editor.addEventListener('dragleave', (e) => {
+        if (e.target === editor) {
+          const dz = document.getElementById('image-dropzone');
+          if (dz) dz.classList.remove('border-teal-500', 'bg-teal-50/60');
+        }
+      });
+      editor.addEventListener('drop', (e) => {
+        if (!getActiveNote()) return;
+        e.preventDefault();
+        const dz = document.getElementById('image-dropzone');
+        if (dz) dz.classList.remove('border-teal-500', 'bg-teal-50/60');
+        processSmartDrop(e.dataTransfer);
+      });
+      document.addEventListener('paste', (e) => {
+        if (state.viewMode !== 'notes' || !getActiveNote()) return;
+        const activeTag = document.activeElement?.tagName;
+        if (activeTag === 'INPUT' || activeTag === 'TEXTAREA') return;
+        if (e.clipboardData) {
+          processSmartDrop(e.clipboardData);
+        }
+      });
+
+      // Per-note Custom Sections & Flashcards forms
+      editor.addEventListener('submit', async (e) => {
+        if (e.target.id === 'form-add-custom-section') {
+          e.preventDefault();
+          const note = getActiveNote();
+          if (!note) return;
+          const input = document.getElementById('new-custom-sec-title');
+          const title = input.value.trim();
+          if (!title) return;
+          note.customSections = note.customSections || [];
+          note.customSections.push({ id: uid('csec'), title, content: '' });
+          note.updatedAt = new Date().toISOString();
+          input.value = '';
+          await persistState();
+          renderAll();
+          showToast(`Added section "${title}"`);
+          return;
+        }
+        if (e.target.id === 'form-add-fc') {
+          e.preventDefault();
+          const note = getActiveNote();
+          if (!note) return;
+          const frontEl = document.getElementById('fc-front-input');
+          const backEl = document.getElementById('fc-back-input');
+          const front = frontEl.value.trim();
+          const back = backEl.value.trim();
+          if (!front || !back) return;
+          note.flashcards = note.flashcards || [];
+          const imgId = document.getElementById('fc-image-select')?.value || null;
+          note.flashcards.push({
+            id: uid('fc'),
+            front,
+            back,
+            imageId: imgId,
+            intervalDays: 0,
+            ease: 2.5,
+            reps: 0,
+            nextReviewAt: new Date().toISOString()
+          });
+          note.updatedAt = new Date().toISOString();
+          frontEl.value = '';
+          backEl.value = '';
+          await persistState();
+          renderAll();
+          showToast('Added flashcard');
+        }
+      });
+
+      editor.addEventListener('click', async (e) => {
+        const note = getActiveNote();
+        if (!note) return;
+        const colBtn = e.target.closest('[data-toggle-collapse]');
+        if (colBtn) {
+          const key = colBtn.getAttribute('data-toggle-collapse');
+          note.collapsedSections = note.collapsedSections || {};
+          note.collapsedSections[key] = !note.collapsedSections[key];
+          persistState();
+          renderEditor();
+          lucide.createIcons();
+          return;
+        }
+        if (e.target.closest('#btn-collapse-all-sec')) {
+          note.collapsedSections = note.collapsedSections || {};
+          state.schema.fields.forEach(f => { note.collapsedSections[f.id] = true; });
+          (note.customSections || []).forEach(c => { note.collapsedSections[c.id] = true; });
+          persistState();
+          renderEditor();
+          lucide.createIcons();
+          return;
+        }
+        if (e.target.closest('#btn-expand-all-sec')) {
+          note.collapsedSections = {};
+          persistState();
+          renderEditor();
+          lucide.createIcons();
+          return;
+        }
+        if (e.target.closest('#btn-view-note-network')) {
+          state.viewMode = 'network';
+          state.selectedNetworkNode = null;
+          renderAll();
+          return;
+        }
+        const delCustomSecBtn = e.target.closest('[data-del-custom-sec]');
+        if (delCustomSecBtn) {
+          const sid = delCustomSecBtn.getAttribute('data-del-custom-sec');
+          note.customSections = (note.customSections || []).filter(s => s.id !== sid);
+          if (note.links) delete note.links[sid];
+          note.updatedAt = new Date().toISOString();
+          await persistState();
+          renderAll();
+          showToast('Section removed');
+          return;
+        }
+        const unlinkBtn = e.target.closest('[data-unlink-item]');
+        if (unlinkBtn) {
+          const [secKey, type, id] = unlinkBtn.getAttribute('data-unlink-item').split('|');
+          if (note.links && note.links[secKey]) {
+            note.links[secKey] = note.links[secKey].filter(l => !(l.type === type && l.id === id));
+          }
+          note.updatedAt = new Date().toISOString();
+          await persistState();
+          renderAll();
+          showToast('Unlinked from section');
+          return;
+        }
+        if (e.target.closest('#btn-autogen-fc')) {
+          const added = autoGenerateFlashcardsForNote(note);
+          await persistState();
+          renderAll();
+          showToast(added > 0 ? `Generated ${added} flashcard${added > 1 ? 's' : ''}` : 'All note sections already have flashcards');
+          return;
+        }
+        if (e.target.closest('#btn-study-note-fc')) {
+          state.viewMode = 'flashcards';
+          state.studyFilter = 'current';
+          state.studyIndex = 0;
+          state.studyFlipped = false;
+          renderAll();
+          return;
+        }
+        const delFcBtn = e.target.closest('[data-del-fc]');
+        if (delFcBtn) {
+          const fcId = delFcBtn.getAttribute('data-del-fc');
+          note.flashcards = (note.flashcards || []).filter(c => c.id !== fcId);
+          note.updatedAt = new Date().toISOString();
+          await persistState();
+          renderAll();
+          showToast('Flashcard removed');
+        }
+      });
+
+      // Network View interactions (Drag nodes, Pan background, Scroll zoom, Expand/Collapse, Auto-Link)
+      const netContainer = document.getElementById('network-container');
+      let netDrag = null; // { type: 'node'|'pan', id, startX, startY, origX, origY, moved }
+
+      netContainer.addEventListener('pointerdown', (e) => {
+        const svg = document.getElementById('network-svg');
+        if (!svg || !e.target.closest('#network-svg')) return;
+        const note = getActiveNote();
+        if (!note) return;
+
+        const nodeEl = e.target.closest('[data-drag-node]');
+        if (nodeEl) {
+          const id = nodeEl.getAttribute('data-drag-node');
+          const rect = nodeEl.querySelector('rect');
+          const curX = rect ? Number(rect.getAttribute('x')) + Number(rect.getAttribute('width')) / 2 : 380;
+          const curY = rect ? Number(rect.getAttribute('y')) + Number(rect.getAttribute('height')) / 2 : 250;
+          netDrag = { type: 'node', id, startX: e.clientX, startY: e.clientY, origX: curX, origY: curY, moved: false };
+          svg.setPointerCapture(e.pointerId);
+        } else {
+          netDrag = { type: 'pan', startX: e.clientX, startY: e.clientY, origX: state.networkView.x, origY: state.networkView.y, moved: false };
+          svg.setPointerCapture(e.pointerId);
+        }
+      });
+
+      netContainer.addEventListener('pointermove', (e) => {
+        if (!netDrag) return;
+        const dx = e.clientX - netDrag.startX;
+        const dy = e.clientY - netDrag.startY;
+        if (Math.abs(dx) > 3 || Math.abs(dy) > 3) netDrag.moved = true;
+        if (!netDrag.moved) return;
+
+        if (netDrag.type === 'pan') {
+          state.networkView.x = netDrag.origX + dx;
+          state.networkView.y = netDrag.origY + dy;
+          const vp = document.getElementById('network-viewport');
+          if (vp) vp.setAttribute('transform', `translate(${state.networkView.x}, ${state.networkView.y}) scale(${state.networkView.scale})`);
+        } else if (netDrag.type === 'node') {
+          const note = getActiveNote();
+          if (!note) return;
+          note.networkLayout = note.networkLayout || {};
+          const scale = state.networkView.scale || 1;
+          note.networkLayout[netDrag.id] = {
+            x: Math.round(netDrag.origX + dx / scale),
+            y: Math.round(netDrag.origY + dy / scale)
+          };
+          renderNetworkView();
+          lucide.createIcons();
+        }
+      });
+
+      netContainer.addEventListener('pointerup', () => {
+        if (netDrag && netDrag.moved && netDrag.type === 'node') {
+          persistState();
+        }
+        netDrag = null;
+      });
+
+      netContainer.addEventListener('wheel', (e) => {
+        if (!e.target.closest('#network-svg')) return;
+        e.preventDefault();
+        const factor = e.deltaY < 0 ? 1.1 : 0.9;
+        state.networkView.scale = Math.min(2.4, Math.max(0.45, Number((state.networkView.scale * factor).toFixed(2))));
+        renderNetworkView();
+        lucide.createIcons();
+      }, { passive: false });
+
+      netContainer.addEventListener('dblclick', (e) => {
+        const nodeEl = e.target.closest('[data-net-node]');
+        if (nodeEl) {
+          const id = nodeEl.getAttribute('data-net-node');
+          if (state.expandedNetworkNodes[id]) delete state.expandedNetworkNodes[id];
+          else state.expandedNetworkNodes[id] = true;
+          state.selectedNetworkNode = { id };
+          renderNetworkView();
+          lucide.createIcons();
+        }
+      });
+
+      netContainer.addEventListener('click', (e) => {
+        if (e.target.closest('#btn-network-to-edit')) {
+          state.viewMode = 'notes';
+          renderAll();
+          return;
+        }
+        if (e.target.closest('#btn-net-zoom-in')) {
+          state.networkView.scale = Math.min(2.4, Number((state.networkView.scale * 1.15).toFixed(2)));
+          renderNetworkView();
+          lucide.createIcons();
+          return;
+        }
+        if (e.target.closest('#btn-net-zoom-out')) {
+          state.networkView.scale = Math.max(0.45, Number((state.networkView.scale * 0.85).toFixed(2)));
+          renderNetworkView();
+          lucide.createIcons();
+          return;
+        }
+        if (e.target.closest('#btn-net-reset')) {
+          const note = getActiveNote();
+          if (note) note.networkLayout = {};
+          state.networkView = { x: 0, y: 0, scale: 1 };
+          state.expandedNetworkNodes = {};
+          persistState();
+          renderNetworkView();
+          lucide.createIcons();
+          return;
+        }
+        if (e.target.closest('#btn-net-autolink')) {
+          const note = getActiveNote();
+          if (!note) return;
+          note.links = note.links || {};
+          let linkedCount = 0;
+          const allTargets = [
+            ...(note.tables || []).map(t => ({ type: 'table', id: t.id, text: (t.title + ' ' + t.columns.join(' ')).toLowerCase() })),
+            ...(note.images || []).map(i => ({ type: 'image', id: i.id, text: ((i.caption || '') + ' ' + (i.modality || '')).toLowerCase() }))
+          ];
+          for (const f of state.schema.fields) {
+            const fText = ((note.fields?.[f.id] || '') + ' ' + f.label).toLowerCase();
+            if (!fText.trim()) continue;
+            for (const tgt of allTargets) {
+              const words = tgt.text.split(/\W+/).filter(w => w.length > 3);
+              if (words.some(w => fText.includes(w))) {
+                note.links[f.id] = note.links[f.id] || [];
+                if (!note.links[f.id].some(l => l.type === tgt.type && l.id === tgt.id)) {
+                  note.links[f.id].push({ type: tgt.type, id: tgt.id });
+                  linkedCount++;
+                }
+              }
+            }
+          }
+          persistState();
+          renderAll();
+          showToast(linkedCount > 0 ? `Auto-linked ${linkedCount} connection${linkedCount > 1 ? 's' : ''}` : 'All matching items already linked');
+          return;
+        }
+        const expBtn = e.target.closest('[data-toggle-expand-node]');
+        if (expBtn) {
+          const id = expBtn.getAttribute('data-toggle-expand-node');
+          if (state.expandedNetworkNodes[id]) delete state.expandedNetworkNodes[id];
+          else state.expandedNetworkNodes[id] = true;
+          renderNetworkView();
+          lucide.createIcons();
+          return;
+        }
+        const nodeEl = e.target.closest('[data-net-node]');
+        if (nodeEl) {
+          state.selectedNetworkNode = { id: nodeEl.getAttribute('data-net-node') };
+          renderNetworkView();
+          lucide.createIcons();
+        }
+      });
+
+      // Lateral Study interactions
+      document.getElementById('lateral-container').addEventListener('click', (e) => {
+        const modeBtn = e.target.closest('[data-lat-mode]');
+        if (modeBtn) {
+          state.lateralMode = modeBtn.getAttribute('data-lat-mode');
+          renderLateralStudyView();
+          lucide.createIcons();
+          return;
+        }
+        const modBtn = e.target.closest('[data-lat-mod]');
+        if (modBtn) {
+          state.lateralModality = modBtn.getAttribute('data-lat-mod');
+          renderLateralStudyView();
+          lucide.createIcons();
+          return;
+        }
+        const dimBtn = e.target.closest('[data-lat-dim]');
+        if (dimBtn) {
+          state.lateralDimension = dimBtn.getAttribute('data-lat-dim');
+          renderLateralStudyView();
+          lucide.createIcons();
+          return;
+        }
+        const jumpBtn = e.target.closest('[data-jump-note]');
+        if (jumpBtn) {
+          state.activeNoteId = jumpBtn.getAttribute('data-jump-note');
+          state.viewMode = 'notes';
+          renderAll();
+          return;
+        }
+        const zoomGlobal = e.target.closest('[data-zoom-img-global]');
+        if (zoomGlobal) {
+          const [nid, iid] = zoomGlobal.getAttribute('data-zoom-img-global').split('|');
+          const n = state.notes.find(x => x.id === nid);
+          const im = n?.images?.find(x => x.id === iid);
+          if (im) {
+            document.getElementById('lightbox-img').src = im.dataUrl;
+            document.getElementById('lightbox-caption').textContent = `${n.title} — ${im.caption || im.modality || ''}`;
+            const lb = document.getElementById('modal-lightbox');
+            lb.classList.remove('hidden');
+            lb.classList.add('flex');
+          }
+        }
+      });
+
+      // Flashcards Deck interactions
+      const fcContainer = document.getElementById('flashcards-container');
+      fcContainer.addEventListener('change', (e) => {
+        if (e.target.id === 'fc-specialty-filter') {
+          state.studySpecialty = e.target.value;
+          state.studyIndex = 0;
+          state.studyFlipped = false;
+          renderFlashcardsDeck();
+          lucide.createIcons();
+        }
+      });
+      fcContainer.addEventListener('input', (e) => {
+        if (e.target.id === 'fc-search-input') {
+          state.studySearch = e.target.value;
+          state.studyIndex = 0;
+          state.studyFlipped = false;
+          renderFlashcardsDeck();
+          lucide.createIcons();
+          const inp = document.getElementById('fc-search-input');
+          if (inp) { inp.focus(); inp.setSelectionRange(inp.value.length, inp.value.length); }
+        }
+      });
+      fcContainer.addEventListener('click', async (e) => {
+        if (e.target.closest('#btn-autogen-all-fc')) {
+          let totalAdded = 0;
+          state.notes.forEach(n => { totalAdded += autoGenerateFlashcardsForNote(n); });
+          await persistState();
+          renderAll();
+          showToast(totalAdded > 0 ? `Generated ${totalAdded} new flashcard${totalAdded > 1 ? 's' : ''}` : 'All notes are already synced to flashcards');
+          return;
+        }
+        const subTabBtn = e.target.closest('[data-fc-subtab]');
+        if (subTabBtn) {
+          state.studySubTab = subTabBtn.getAttribute('data-fc-subtab');
+          renderFlashcardsDeck();
+          lucide.createIcons();
+          return;
+        }
+        const filterBtn = e.target.closest('[data-fc-filter]');
+        if (filterBtn) {
+          state.studyFilter = filterBtn.getAttribute('data-fc-filter');
+          state.studyIndex = 0;
+          state.studyFlipped = false;
+          renderAll();
+          return;
+        }
+        const navBtn = e.target.closest('[data-nav-fc]');
+        if (navBtn) {
+          const queue = getStudyQueue();
+          if (queue.length) {
+            const delta = Number(navBtn.getAttribute('data-nav-fc'));
+            state.studyIndex = (state.studyIndex + delta + queue.length) % queue.length;
+            state.studyFlipped = false;
+            renderFlashcardsDeck();
+            lucide.createIcons();
+          }
+          return;
+        }
+        const resetBtn = e.target.closest('[data-reset-fc]');
+        if (resetBtn) {
+          const [nid, cid] = resetBtn.getAttribute('data-reset-fc').split('|');
+          const n = state.notes.find(x => x.id === nid);
+          const c = n?.flashcards?.find(x => x.id === cid);
+          if (c) {
+            c.intervalDays = 0; c.reps = 0; c.ease = 2.5; c.nextReviewAt = new Date().toISOString();
+            await persistState();
+            renderAll();
+            showToast('Card progress reset');
+          }
+          return;
+        }
+        const jumpBtn = e.target.closest('[data-jump-note]');
+        if (jumpBtn) {
+          state.activeNoteId = jumpBtn.getAttribute('data-jump-note');
+          state.viewMode = 'notes';
+          renderAll();
+          return;
+        }
+        if (e.target.closest('#btn-back-to-notes')) {
+          state.viewMode = 'notes';
+          renderAll();
+          return;
+        }
+        if (e.target.closest('#flashcard-surface') || e.target.closest('#btn-flip-card')) {
+          state.studyFlipped = !state.studyFlipped;
+          renderFlashcardsDeck();
+          lucide.createIcons();
+          return;
+        }
+        const rateBtn = e.target.closest('[data-rate-fc]');
+        if (rateBtn) {
+          const queue = getStudyQueue();
+          const card = queue[state.studyIndex];
+          if (card) {
+            rateFlashcard(card.noteId, card.id, Number(rateBtn.getAttribute('data-rate-fc')));
+          }
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (state.viewMode !== 'flashcards' || state.studySubTab !== 'study') return;
+        const tag = document.activeElement?.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+        const queue = getStudyQueue();
+        if (!queue.length) return;
+        if (e.code === 'Space') {
+          e.preventDefault();
+          state.studyFlipped = !state.studyFlipped;
+          renderFlashcardsDeck();
+          lucide.createIcons();
+        } else if (state.studyFlipped && ['1', '2', '3', '4'].includes(e.key)) {
+          const card = queue[state.studyIndex];
+          if (card) rateFlashcard(card.noteId, card.id, Number(e.key));
+        } else if (e.key === 'ArrowRight') {
+          state.studyIndex = (state.studyIndex + 1) % queue.length;
+          state.studyFlipped = false;
+          renderFlashcardsDeck();
+          lucide.createIcons();
+        } else if (e.key === 'ArrowLeft') {
+          state.studyIndex = (state.studyIndex - 1 + queue.length) % queue.length;
+          state.studyFlipped = false;
+          renderFlashcardsDeck();
+          lucide.createIcons();
+        }
+      });
+
+      // Gemini AI Modal
+      document.getElementById('btn-open-ai').addEventListener('click', () => {
+        loadGeminiKey();
+        const m = document.getElementById('modal-ai');
+        m.classList.remove('hidden');
+        m.classList.add('flex');
+      });
+      document.getElementById('btn-close-ai').addEventListener('click', () => {
+        const m = document.getElementById('modal-ai');
+        m.classList.add('hidden');
+        m.classList.remove('flex');
+      });
+      document.getElementById('btn-ai-link-note').addEventListener('click', () => runAiAutoLink(getActiveNote()));
+      document.getElementById('btn-ai-gen-cards').addEventListener('click', () => runAiGenerateFlashcards(getActiveNote()));
+      document.getElementById('btn-ai-ask').addEventListener('click', async () => {
+        const note = getActiveNote();
+        const q = document.getElementById('ai-prompt-input').value.trim();
+        if (!q) return;
+        setAiStatus('Asking Gemini...');
+        const box = document.getElementById('ai-response-box');
+        try {
+          const ctx = note ? `Condition: ${note.title} (${note.specialty}). Summary: ${note.fields?.summary || ''}. Pathophysiology: ${note.fields?.pathophysiology || ''}.` : '';
+          const ans = await callGemini(`You are an ophthalmology study assistant. ${ctx}
+
+User question: ${q}`, false);
+          box.textContent = ans;
+          box.classList.remove('hidden');
+          setAiStatus('Done.');
+        } catch (err) {
+          setAiStatus(`Request failed: ${err.message}`, true);
+        }
+      });
+
+      // Schema Modal
+      document.getElementById('btn-open-schema').addEventListener('click', openSchemaModal);
+      document.getElementById('btn-close-schema').addEventListener('click', closeSchemaModal);
+
+      document.getElementById('form-add-field').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const labelEl = document.getElementById('new-field-label');
+        const typeEl = document.getElementById('new-field-type');
+        const label = labelEl.value.trim();
+        if (!label) return;
+        state.schema.fields.push({
+          id: uid('fld'),
+          label,
+          type: typeEl.value,
+          placeholder: `Enter ${label.toLowerCase()}...`
+        });
+        labelEl.value = '';
+        await persistState();
+        renderSchemaModal();
+        renderEditor();
+        showToast(`Added field "${label}"`);
+      });
+
+      document.getElementById('form-add-specialty').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const input = document.getElementById('new-specialty-name');
+        const name = input.value.trim();
+        if (!name || state.schema.specialties.includes(name)) return;
+        state.schema.specialties.push(name);
+        input.value = '';
+        await persistState();
+        renderSchemaModal();
+        renderAll();
+        showToast(`Added specialty "${name}"`);
+      });
+
+      document.getElementById('modal-schema').addEventListener('click', async (e) => {
+        const delFieldBtn = e.target.closest('[data-del-schema-field]');
+        if (delFieldBtn) {
+          const fid = delFieldBtn.getAttribute('data-del-schema-field');
+          state.schema.fields = state.schema.fields.filter(f => f.id !== fid);
+          await persistState();
+          renderSchemaModal();
+          renderEditor();
+          return;
+        }
+        const delSpecBtn = e.target.closest('[data-del-schema-spec]');
+        if (delSpecBtn) {
+          const spec = delSpecBtn.getAttribute('data-del-schema-spec');
+          state.schema.specialties = state.schema.specialties.filter(s => s !== spec);
+          if (state.activeSpecialty === spec) state.activeSpecialty = 'All';
+          await persistState();
+          renderSchemaModal();
+          renderAll();
+        }
+      });
+
+      // Sync Modal
+      document.getElementById('btn-open-sync').addEventListener('click', openSyncModal);
+      document.getElementById('btn-close-sync').addEventListener('click', closeSyncModal);
+
+      document.getElementById('backup-interval-select').addEventListener('change', (e) => {
+        const prefs = getBackupPrefs();
+        prefs.intervalDays = Number(e.target.value);
+        saveBackupPrefs(prefs);
+        checkAutoBackupDue();
+        showToast(prefs.intervalDays > 0 ? `Auto-backup set to every ${prefs.intervalDays} day(s)` : 'Auto-backup turned off');
+      });
+      document.getElementById('btn-restore-snapshot').addEventListener('click', restoreRollingSnapshot);
+      document.getElementById('input-import-merge').addEventListener('change', (e) => {
+        handleImportJson(e.target.files[0], 'merge');
+        e.target.value = '';
+      });
+      document.getElementById('input-import-replace').addEventListener('change', (e) => {
+        handleImportJson(e.target.files[0], 'replace');
+        e.target.value = '';
+      });
+      document.getElementById('btn-gist-push').addEventListener('click', pushToGist);
+      document.getElementById('btn-gist-pull').addEventListener('click', pullFromGist);
+      document.getElementById('gist-autosync-check').addEventListener('change', saveSyncCredsIfChecked);
+      document.getElementById('gist-remember-check').addEventListener('change', saveSyncCredsIfChecked);
+
+      // Confirmation Modal
+      document.getElementById('btn-confirm-cancel').addEventListener('click', closeConfirm);
+      document.getElementById('btn-confirm-ok').addEventListener('click', () => {
+        const cb = confirmCallback;
+        closeConfirm();
+        if (cb) cb();
+      });
+
+      // Lightbox Modal
+      document.getElementById('btn-close-lightbox').addEventListener('click', () => {
+        const lb = document.getElementById('modal-lightbox');
+        lb.classList.add('hidden');
+        lb.classList.remove('flex');
+      });
+      document.getElementById('modal-lightbox').addEventListener('click', (e) => {
+        if (e.target.id === 'modal-lightbox') {
+          e.target.classList.add('hidden');
+          e.target.classList.remove('flex');
+        }
+      });
+    }
+
+    /* =========================================================================
+       7. INITIALIZATION
+       ========================================================================= */
+    window.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+        if (savedTheme === 'dark') {
+          document.documentElement.classList.add('dark');
+          const icon = document.getElementById('icon-dark-mode');
+          if (icon) icon.setAttribute('data-lucide', 'sun');
+        }
+      } catch {}
+      const loaded = await loadAppState();
+      state.schema = loaded.schema || structuredClone(DEFAULT_SCHEMA);
+      state.notes = loaded.notes || structuredClone(INITIAL_NOTES);
+      if (state.notes.every(n => !n.flashcards || n.flashcards.length === 0)) {
+        state.notes.forEach(n => autoGenerateFlashcardsForNote(n));
+      }
+      state.lastSyncedAt = loaded.lastSyncedAt || null;
+      state.activeNoteId = state.notes[0]?.id || null;
+
+      bindEvents();
+      renderAll();
+      if (state.lastSyncedAt) {
+        document.getElementById('sync-status-label').textContent = `Saved locally • Cloud sync: ${formatDate(state.lastSyncedAt)}`;
+      }
+      checkAutoBackupDue();
+      runBackgroundPull();
+      if ('serviceWorker' in navigator && location.protocol === 'https:') {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      }
+    });
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        runBackgroundPull();
+      }
+    });
+  </script>
+</body>
+</html>
