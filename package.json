@@ -1,0 +1,30 @@
+{
+  "name": "visiondesk",
+  "version": "1.0.0",
+  "description": "VisionDesk — Ophthalmology Notes, Classification Tables, Visual Networks & Flashcards",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win"
+  },
+  "build": {
+    "appId": "com.visiondesk.app",
+    "productName": "VisionDesk",
+    "files": [
+      "main.js",
+      "index.html",
+      "Logo2.png"
+    ],
+    "win": {
+      "target": [
+        "portable",
+        "nsis"
+      ],
+      "icon": "Logo2.png"
+    }
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.1.8"
+  }
+}
